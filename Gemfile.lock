@@ -114,6 +114,7 @@ GEM
     nokogiri (1.13.1)
       mini_portile2 (~> 2.7.0)
       racc (~> 1.4)
+    pg (1.2.3)
     puma (5.5.2)
       nio4r (~> 2.0)
     racc (1.6.0)
@@ -149,7 +150,6 @@ GEM
     rake (13.0.6)
     reline (0.3.1)
       io-console (~> 0.5)
-    sqlite3 (1.4.2)
     strscan (3.0.1)
     thor (1.2.1)
     timeout (0.2.0)
@@ -166,9 +166,9 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   debug
+  pg (~> 1.1)
   puma (~> 5.0)
   rails (~> 7.0.1)
-  sqlite3 (~> 1.4)
   tzinfo-data
 
 RUBY VERSION
