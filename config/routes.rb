@@ -10,4 +10,5 @@ Rails.application.routes.draw do
   post '/users', to: 'users#create'
   put '/users/:id', to: 'users#update'
   delete '/users/:id', to: 'users#delete'
+  get '/login', to: 'users#login'
 end

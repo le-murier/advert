@@ -1,5 +1,9 @@
 class UsersController < ApplicationController
 
+  def login
+    
+  end
+=begin
   def show
     @users = User.all
     render json: @users
@@ -24,5 +28,5 @@ class UsersController < ApplicationController
     @user.destroy
     render json: {message: "User was destroyed"}, status: 200
   end
-
+=end
 end

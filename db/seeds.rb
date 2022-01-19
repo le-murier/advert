@@ -5,3 +5,45 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+User.create(
+     user_name: "testUser0",
+     email: "testUser0@gmail.com",
+     password_digest: "securepassword123",
+     role: "user",
+)
+
+User.create(
+      user_name: "testUser1",
+      email: "testUser1@gmail.com",
+      password_digest: "securepassword456",
+      role: "user",
+)
+
+User.create(
+      user_name: "admin",
+      email: "admin@gmail.com",
+      password_digest: "securepassword789",
+      role: "admin",
+)
+
+Advertisement.create(
+      title: "Test advert",
+      content: "We are testing some features right now",
+      user_id: 1,
+      status: "publicated",
+      views: 1,
+)
+
+Advertisement.create(
+      title: "Draft",
+      content: "I don't know what to write...",
+      user_id: 2,
+      status: "draft",
+      views: 0,
+)
+
+Comment.create(
+      adverb_id: 1,
+      content: "Testing Comment, dude",
+      user_id: 1,
+)

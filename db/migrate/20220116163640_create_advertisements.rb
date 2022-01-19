@@ -3,8 +3,8 @@ class CreateAdvertisements < ActiveRecord::Migration[7.0]
     create_table :advertisements do |t|
       t.string :title, :null => false
       t.text :content, :null => false
-      t.string :user_id, :null => false
-      t.integer :status
+      t.integer :user_id, :null => false
+      t.string :status
       t.integer :views
       t.timestamps
     end
