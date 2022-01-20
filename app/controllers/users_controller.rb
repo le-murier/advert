@@ -17,9 +17,13 @@ class UsersController < ApplicationController
   def login
     @user = User.find_by(user_name: params[:user_name])
     @s_password = params[:password_digest]
-    if @user
+    if @user && @s_password == @user.password_digest
       token = encode_token({user_id: @user.id})
-      render json: {user: @user, token: token}
+      if token == get_token
+        render json: {user: @user, token: token}
+      else
+        render json: {error: "Invalid token getted"}
+      end
     else
       render json: {error: "Invalid user_name or password"}
     end

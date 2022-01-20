@@ -22,6 +22,10 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def get_token
+    token = auth_header.split(' ')[1]
+  end
+
   def logged_in_user
     if decoded_token
       user_id = decoded_token[0]['user_id']
