@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(version: 2022_01_16_170244) do
   create_table "advertisements", force: :cascade do |t|
     t.string "title", null: false
     t.text "content", null: false
-    t.string "user_id", null: false
-    t.integer "status"
+    t.integer "user_id", null: false
+    t.string "status"
     t.integer "views"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -28,20 +28,16 @@ ActiveRecord::Schema.define(version: 2022_01_16_170244) do
   create_table "comments", force: :cascade do |t|
     t.integer "adverb_id", null: false
     t.text "content", null: false
+    t.integer "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "customers", id: :serial, force: :cascade do |t|
-    t.integer "age"
-    t.string "firstname", limit: 20, null: false
   end
 
   create_table "users", force: :cascade do |t|
     t.string "user_name", null: false
     t.string "email", null: false
-    t.string "password", null: false
-    t.boolean "admin"
+    t.string "password_digest", null: false
+    t.string "role"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

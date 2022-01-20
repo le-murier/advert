@@ -1,32 +1,38 @@
 class UsersController < ApplicationController
 
-  def login
-    
-  end
-=begin
-  def show
-    @users = User.all
-    render json: @users
-  end
+  before_action :authorized, only: [:auto_login]
 
+  # REGISTER
   def create
-    @user = User.new({
-          user_name: params[:user_name],
-          email: params[:email],
-          password: params[:password],
-          admin: params[:admin]
-      })
-    if @user.save
-      render json: @user
+    @user = User.create(user_params)
+    if @user.valid?
+      token = encode_token({user_id: @user.id})
+      render json: {user: @user, token: token}
     else
-      render error: {error: "Unable to create a user"}, status: 400
+      render json: {error: "Invalid user_name or password"}
     end
   end
 
-  def delete
-    @user = User.find(params[:id])
-    @user.destroy
-    render json: {message: "User was destroyed"}, status: 200
+  # LOGGING IN
+  def login
+    @user = User.find_by(user_name: params[:user_name])
+    @s_password = params[:password_digest]
+    if @user
+      token = encode_token({user_id: @user.id})
+      render json: {user: @user, token: token}
+    else
+      render json: {error: "Invalid user_name or password"}
+    end
   end
-=end
+
+
+  def auto_login
+    render json: @user
+  end
+
+  private
+
+  def user_params
+    params.permit(:user_name, :email, :password_digest, :role)
+  end
 end
