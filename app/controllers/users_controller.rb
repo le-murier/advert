@@ -6,37 +6,37 @@ class UsersController < ApplicationController
   def create
     @user = User.create(user_params)
     if @user.valid?
-      token = encode_token({user_id: @user.id})
-      render json: {user: @user, token: token}
+      render json: { message: "User was created" }
     else
-      render json: {error: "Invalid user_name or password"}
+      render json: { error: "Invalid data" }
     end
   end
 
   # LOGGING IN
   def login
     @user = User.find_by(user_name: params[:user_name])
-    @s_password = params[:password_digest]
-    if @user && @s_password == @user.password_digest
+    @s_password = params[:password]
+    if @user && @s_password == @user.password
       token = encode_token({user_id: @user.id})
-      if token == get_token
-        render json: {user: @user, token: token}
-      else
-        render json: {error: "Invalid token getted"}
-      end
+      @user.update(token: token)
+      render json: { token: token }
     else
-      render json: {error: "Invalid user_name or password"}
+      render json: { error: "Invalid user_name or password" }
     end
   end
 
-
-  def auto_login
-    render json: @user
+  def test
+    @users = User.all
+    render json: @users
   end
 
   private
 
   def user_params
-    params.permit(:user_name, :email, :password_digest, :role)
+    user_data = {
+      user_name: params[:user_name],
+      email: params[:email],
+      password: BCrypt::Password.create(params[:password_digest]),
+      role: params[:role]}
   end
 end
