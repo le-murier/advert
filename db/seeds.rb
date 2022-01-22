@@ -8,21 +8,21 @@
 User.create(
      user_name: "testUser0",
      email: "testUser0@gmail.com",
-     password_digest: "securepassword123",
+     password: "securepassword123",
      role: "user",
 )
 
 User.create(
       user_name: "testUser1",
       email: "testUser1@gmail.com",
-      password_digest: "securepassword456",
+      password: "securepassword456",
       role: "user",
 )
 
 User.create(
       user_name: "admin",
       email: "admin@gmail.com",
-      password_digest: "securepassword789",
+      password: "securepassword789",
       role: "admin",
 )
 
