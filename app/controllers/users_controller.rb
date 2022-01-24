@@ -6,17 +6,13 @@ class UsersController < ApplicationController
   # SHOW ALL Users
   def show
     @users = User.all
-    @array_to_json = []
-    @users.each do |i|
-      @array_to_json.push(username: i.user_name)
-    end
-    render json:  @array_to_json.to_json, status: 200
+    render json:  @users, status: 200
   end
 
   # SHOW User by id
   def show_id
     @user = User.find(params[:id])
-    render json: { username: @user.user_name }, status: 200
+    render json: @user, status: 200
   end
 
   # SHOW all admins

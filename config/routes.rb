@@ -8,4 +8,15 @@ Rails.application.routes.draw do
   post '/login', to: 'users#login'
   put '/users/:id', to: 'users#update'
   delete '/users/:id', to: 'users#delete'
+
+    #GET /advertisements
+    #GET /advertisements/:id
+    #GET /advertisements/?sort=date
+    #GET /advertisements/:id/comments
+    #GET /advertisements/?status=created
+    #POST /advertisements/:id
+    #PUT /advertisements/:id
+    #DELETE /advertisements/:id
+  get '/advertisements', to: 'advertisements#show'
+  get '/advertisements/:id', to: 'advertisements#show_id'
 end
