@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   before_action :authorized,
-   only: [:show, :show_id, :show_admins, :update, :delete]
+  only: [:show, :show_id, :show_admins, :update, :delete]
 
   # SHOW ALL Users
   def show
@@ -52,20 +52,23 @@ class UsersController < ApplicationController
   # Update User
   def update
     @user = User.find(params[:id])
-    @user.update(user_params)
-    render json: { message: "User was updated" }, status: 200
-  end
-
-  def test
-    @users = User.all
-    render json: @users, status: 200
+    if @user.token == params[:token]
+      @user.update(user_params)
+      render json: { message: "User was updated" }, status: 200
+    else
+      render json: { message: "Access denied" }, status: 404
+    end
   end
 
   # DELETE User
   def delete
     @user = User.find(params[:id])
-    @user.destroy
-    render json: { message: "User was destroyed" }, status: 200
+    if @user.token == params[:token]
+      @user.destroy
+      render json: { message: "User was destroyed" }, status: 200
+    else
+      render json: { message: "Access denied" }, status: 404
+    end
   end
 
   private
