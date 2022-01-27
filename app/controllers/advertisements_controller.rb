@@ -4,24 +4,35 @@ class AdvertisementsController < ApplicationController
 
   # SHOW ALL advert
   def show
-    #scope :readible, -> { where("status != draft") }
-    #@advertisements = Advertisement.readible
-    @advertisements = Advertisement.where(status: "publicated")
-    render json:  @advertisements, status: 200
+      @advertisements = Advertisement.where(status: "publicated")
+      @sorting_value = params[:sort]
+      if @sorting_value == "title"
+        render json:  @advertisements.order("title DESC"), status: 200
+      elsif @sorting_value == "date"
+        render json:  @advertisements.order("created_at DESC"), status: 200
+      elsif @sorting_value == "views"
+        render json:  @advertisements.order("views DESC"), status: 200
+      else
+        render json:  @advertisements, status: 200
+      end
   end
 
   # SHOW advert by id
   def show_id
-    @advert = Advertisement.find(params[:id])
-    if @advert && @advert.status != "draft"
-      render json: {
-          title: @advert.title,
-          content: @advert.content,
-          username: User.find(@advert.user_id).user_name,
-          views: @advert.views,
-      },  status: 200
+    if params[:id] != "drafts"
+      @advert = Advertisement.find(params[:id])
+      if @advert && @advert.status != "draft"
+        render json: {
+            title: @advert.title,
+            content: @advert.content,
+            username: User.find(@advert.user_id).user_name,
+            views: @advert.views,
+        },  status: 200
+      else
+        render json: { message: "Invalid input" }, status: 404
+      end
     else
-      render json: { message: "Invalid input" }, status: 404
+      show_draft
     end
   end
 
@@ -45,7 +56,7 @@ class AdvertisementsController < ApplicationController
       @advert.update(advert_params(2))
     end
     if @advert.valid?
-      render json: { message: "Advertisement was updated" }, status: 404
+      render json: { message: "Advertisement was updated" }, status: 200
     else
       render json: { message: "Wrong params" }, status: 404
     end
@@ -58,7 +69,26 @@ class AdvertisementsController < ApplicationController
       @advert.destroy
       render json: { message: "Advertisement was destroyed" }, status: 200
     else
-      render json: { message: "Acces denied" }, status: 404
+      render json: { message: "Wrong permition" }, status: 404
+    end
+  end
+
+  def show_draft
+    @id = decoded_token[0]['user_id']
+    if User.find(@id).role == "admin"
+      @advertisements = Advertisement.where(status: "draft")
+      render json:  @advertisements, status: 200
+    else
+      render json: { message: "Wrong permition" }, status: 404
+    end
+  end
+
+  def show_comments
+    if Advertisement.find(params[:id]).status != "draft"
+      @comments = Comment.where(adverb_id: params[:id])
+      render json: @comments, status: 200
+    else
+      render json: { message: "Wrong permition" }, status: 404
     end
   end
 
@@ -88,7 +118,8 @@ class AdvertisementsController < ApplicationController
 
   def belongs_to_user(id)
     @advert = Advertisement.find(id)
-    @user = User.find(params[:user_id])
+    @id = decoded_token[0]['user_id']
+    @user = User.find(@id)
     @result = 0
     if @advert.user_id.to_s == params[:user_id] && @user.role != "admin"
       @result = 1

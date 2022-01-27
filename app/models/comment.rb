@@ -1,3 +1,3 @@
 class Comment < ApplicationRecord
-  belongs_to :user, :advertisement
+  belongs_to :user
 end

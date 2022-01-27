@@ -11,10 +11,10 @@ Rails.application.routes.draw do
 
 
     #GET /advertisements/?sort=date ?
-    #GET /advertisements/:id/comments ???
-    #GET /advertisements/?status=created /admin only
   get '/advertisements', to: 'advertisements#show'
   get '/advertisements/:id', to: 'advertisements#show_id'
+  get '/advertisements/drafts', to: 'advertisements#show_draft'
+  get '/advertisements/:id/comments', to: 'advertisements#show_comments'
   post '/advertisements', to: 'advertisements#create'
   put '/advertisements/:id', to: 'advertisements#update'
   delete '/advertisements/:id', to: 'advertisements#delete'
