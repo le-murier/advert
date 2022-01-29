@@ -1,22 +1,17 @@
 class UsersController < ApplicationController
-
   before_action :authorized,
-   only: [:show, :show_id, :show_admins, :update, :delete]
+  only: [:show, :show_id, :show_admins, :update, :delete]
 
   # SHOW ALL Users
   def show
     @users = User.all
-    @array_to_json = []
-    @users.each do |i|
-      @array_to_json.push(username: i.user_name)
-    end
-    render json:  @array_to_json.to_json, status: 200
+    render json: @users, status: 200
   end
 
   # SHOW User by id
   def show_id
     @user = User.find(params[:id])
-    render json: { username: @user.user_name }, status: 200
+    render json: @user, status: 200
   end
 
   # SHOW all admins
@@ -26,7 +21,7 @@ class UsersController < ApplicationController
       @admins =  User.find_by(role: "admin")
       render json:  @admins, status: 200
     else
-      render json: { message: "Access is denied" }, status: 404
+      render json: { message: "Wrong user rights" }, status: 404
     end
   end
 
@@ -44,8 +39,8 @@ class UsersController < ApplicationController
   def login
     @user = User.find_by(user_name: params[:user_name])
     @s_password = params[:password]
-    if @user && @s_password == @user.password
-      token = encode_token({user_id: @user.id})
+    if @user && BCrypt::Password.new(@user.password_digest) == @s_password
+      token = encode_token({ user_id: @user.id })
       @user.update(token: token)
       render json: { token: token }, status: 200
     else
@@ -56,29 +51,52 @@ class UsersController < ApplicationController
   # Update User
   def update
     @user = User.find(params[:id])
-    @user.update(user_params)
-    render json: { message: "User was updated" }, status: 200
-  end
-
-  def test
-    @users = User.all
-    render json: @users, status: 200
+    if @user.token == params[:token]
+      @user.update(user_params)
+      render json: { message: "User was updated" }, status: 200
+    else
+      render json: { message: "Wrong user rights" }, status: 404
+    end
   end
 
   # DELETE User
   def delete
     @user = User.find(params[:id])
-    @user.destroy
-    render json: { message: "User was destroyed" }, status: 200
+    if @user.token == params[:token]
+      @user.destroy
+      render json: { message: "User was destroyed" }, status: 200
+    else
+      render json: { message: "Wrong user rights" }, status: 404
+    end
+  end
+
+  def log_out
+    @token = params[:token]
+    if @token
+      @user.update(token: nil)
+      render json: { message: "User was logged out" }, status: 200
+    else
+      render json: { message: "Wrong user rights" }, status: 404
+    end
   end
 
   private
 
   def user_params
-    user_data = {
-      user_name: params[:user_name],
-      email: params[:email],
-      password: BCrypt::Password.create(params[:password_digest]),
-      role: params[:role]}
+    @valid_password = !!params[:password].match(/^(?=.*[a-zA-Z])(?=.*[0-9]).{6,}$/)
+    @valid_email = !!params[:email].match(/\A[\w.+-]+@\w+\.\w+\z/)
+    if @valid_password && @valid_email
+      @password = params[:password]
+      @email = params[:email]
+    else
+      @password = null
+      @email = null
+    end
+      user_data = {
+        user_name: params[:user_name],
+        email: @email,
+        password_digest: BCrypt::Password.create(@password),
+        role: params[:role]
+      }
   end
 end
