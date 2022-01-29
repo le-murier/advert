@@ -1,8 +1,8 @@
 # README
 
-The api application for creating advertisements, comments, and login logout users
+The api application for creating advertisements, comments, and login/logout users
 
-Things you may want to cover:
+Versions:
 * ruby 2.7.0p0
 * postgres (PostgreSQL) 13.4
 
