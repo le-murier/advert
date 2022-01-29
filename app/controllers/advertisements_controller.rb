@@ -1,6 +1,6 @@
 class AdvertisementsController < ApplicationController
-  #before_action :authorized,
-  #only: [:show, :show_id, :show_admins, :update, :delete]
+  before_action :authorized,
+  only: [:show_id, :create, :update, :delete, :show_draft, :show_comments]
 
   # SHOW ALL advert
   def show
@@ -73,6 +73,7 @@ class AdvertisementsController < ApplicationController
     end
   end
 
+  # SHOW drafts admin only
   def show_draft
     @id = decoded_token[0]['user_id']
     if User.find(@id).role == "admin"
@@ -83,9 +84,20 @@ class AdvertisementsController < ApplicationController
     end
   end
 
+  # SHOW comments to the article (in creation)
   def show_comments
+    #comments/?page=:npage
+    #1 page = 10 comments
     if Advertisement.find(params[:id]).status != "draft"
       @comments = Comment.where(adverb_id: params[:id])
+      #@comments.find_each do |comment|
+        #if i == (page - 1) * 10
+        #  ...load to one json
+        #if i == page*10
+        #  exit
+        #render some_array_with_comments.to_json
+      #end offset
+      #or SELECT * FROM comments WHERE advert_id = @var AND id > @var LIMIT 10
       render json: @comments, status: 200
     else
       render json: { message: "Wrong permition" }, status: 404
