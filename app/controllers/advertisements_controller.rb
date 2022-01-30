@@ -29,7 +29,7 @@ class AdvertisementsController < ApplicationController
             views: @advert.views,
         },  status: 200
       else
-        render json: { message: "Invalid input" }, status: 404
+        render json: { message: "Invalid input" }, status: 400
       end
     else
       show_draft
@@ -40,9 +40,9 @@ class AdvertisementsController < ApplicationController
   def create
     @advert = Advertisement.create(advert_params(0))
     if @advert.valid?
-      render json: { message: "Advertisement was created" }, status: 200
+      render json: { message: "Advertisement was created" }, status: 201
     else
-      render json: { error: "Invalid data" }, status: 404
+      render json: { error: "Invalid data" }, status: 400
     end
   end
 
@@ -58,7 +58,7 @@ class AdvertisementsController < ApplicationController
     if @advert.valid?
       render json: { message: "Advertisement was updated" }, status: 200
     else
-      render json: { message: "Wrong params" }, status: 404
+      render json: { message: "Wrong params" }, status: 400
     end
   end
 
@@ -69,7 +69,7 @@ class AdvertisementsController < ApplicationController
       @advert.destroy
       render json: { message: "Advertisement was destroyed" }, status: 200
     else
-      render json: { message: "Wrong permition" }, status: 404
+      render json: { message: "Wrong permition" }, status: 403
     end
   end
 
@@ -80,7 +80,7 @@ class AdvertisementsController < ApplicationController
       @advertisements = Advertisement.where(status: "draft")
       render json:  @advertisements, status: 200
     else
-      render json: { message: "Wrong permition" }, status: 404
+      render json: { message: "Wrong permition" }, status: 403
     end
   end
 
@@ -100,7 +100,7 @@ class AdvertisementsController < ApplicationController
       #or SELECT * FROM comments WHERE advert_id = @var AND id > @var LIMIT 10
       render json: @comments, status: 200
     else
-      render json: { message: "Wrong permition" }, status: 404
+      render json: { message: "Wrong permition" }, status: 403
     end
   end
 

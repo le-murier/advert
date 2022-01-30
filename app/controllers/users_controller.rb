@@ -21,7 +21,7 @@ class UsersController < ApplicationController
       @admins =  User.find_by(role: "admin")
       render json:  @admins, status: 200
     else
-      render json: { message: "Wrong user rights" }, status: 404
+      render json: { message: "Wrong user rights" }, status: 403
     end
   end
 
@@ -29,9 +29,9 @@ class UsersController < ApplicationController
   def create
     @user = User.create(user_params)
     if @user.valid?
-      render json: { message: "User was created" }, status: 200
+      render json: { message: "User was created" }, status: 201
     else
-      render json: { error: "Invalid data" }, status: 404
+      render json: { error: "Invalid data" }, status: 400
     end
   end
 
@@ -44,7 +44,7 @@ class UsersController < ApplicationController
       @user.update(token: token)
       render json: { token: token }, status: 200
     else
-      render json: { error: "Invalid username or password" }, status: 404
+      render json: { error: "Invalid username or password" }, status: 400
     end
   end
 
@@ -55,7 +55,7 @@ class UsersController < ApplicationController
       @user.update(user_params)
       render json: { message: "User was updated" }, status: 200
     else
-      render json: { message: "Wrong user rights" }, status: 404
+      render json: { message: "Wrong user rights" }, status: 403
     end
   end
 
@@ -66,7 +66,7 @@ class UsersController < ApplicationController
       @user.destroy
       render json: { message: "User was destroyed" }, status: 200
     else
-      render json: { message: "Wrong user rights" }, status: 404
+      render json: { message: "Wrong user rights" }, status: 403
     end
   end
 
@@ -76,7 +76,7 @@ class UsersController < ApplicationController
       @user.update(token: nil)
       render json: { message: "User was logged out" }, status: 200
     else
-      render json: { message: "Wrong user rights" }, status: 404
+      render json: { message: "Wrong user rights" }, status: 403
     end
   end
 

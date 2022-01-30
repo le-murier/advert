@@ -1,5 +1,5 @@
-class CommentsController < ApplicationController
-  
+tclass CommentsController < ApplicationController
+
   def show
     @comments = Comment.all
     render json: @comments, status: 200
@@ -8,9 +8,9 @@ class CommentsController < ApplicationController
   def create
     @comment = Comment.create(user_params)
     if @comment.valid?
-      render json: { message: "Comment was created" }, status: 200
+      render json: { message: "Comment was created" }, status: 201
     else
-      render json: { error: "Invalid data" }, status: 404
+      render json: { error: "Invalid data" }, status: 400
     end
   end
 
