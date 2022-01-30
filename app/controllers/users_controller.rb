@@ -71,8 +71,9 @@ class UsersController < ApplicationController
   end
 
   def log_out
-    @token = params[:token]
-    if @token
+    @token = get_token()
+    @user = User.find_by(token: @token)
+    if @token && @user
       @user.update(token: nil)
       render json: { message: "User was logged out" }, status: 200
     else

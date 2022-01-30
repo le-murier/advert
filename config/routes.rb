@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   delete '/advertisements/:id', to: 'advertisements#delete'
   #
   get '/comments/:id', to: 'comments#show'
-  post '/comment/:id', to: 'comments#create'
+  post '/comments', to: 'comments#create'
   put '/comments/:id', to: 'comments#update'
   delete '/comments/:id', to: 'comments#delete'
 end

@@ -45,5 +45,5 @@
 Comment.create(
       adverb_id: @advert0.id,
       content: "Testing Comment, dude",
-      user_id: 1,
+      user_id: @user0.id,
 )
