@@ -22,6 +22,7 @@ class AdvertisementsController < ApplicationController
     if params[:id] != "drafts"
       @advert = Advertisement.find(params[:id])
       if @advert && @advert.status != "draft"
+        add_view(params[:id])
         render json: {
             title: @advert.title,
             content: @advert.content,
@@ -29,7 +30,7 @@ class AdvertisementsController < ApplicationController
             views: @advert.views,
         },  status: 200
       else
-        render json: { message: "Invalid input" }, status: 404
+        render json: { message: "Invalid input" }, status: 400
       end
     else
       show_draft
@@ -40,9 +41,9 @@ class AdvertisementsController < ApplicationController
   def create
     @advert = Advertisement.create(advert_params(0))
     if @advert.valid?
-      render json: { message: "Advertisement was created" }, status: 200
+      render json: { message: "Advertisement was created" }, status: 201
     else
-      render json: { error: "Invalid data" }, status: 404
+      render json: { error: "Invalid data" }, status: 400
     end
   end
 
@@ -58,7 +59,7 @@ class AdvertisementsController < ApplicationController
     if @advert.valid?
       render json: { message: "Advertisement was updated" }, status: 200
     else
-      render json: { message: "Wrong params" }, status: 404
+      render json: { message: "Wrong params" }, status: 400
     end
   end
 
@@ -66,10 +67,14 @@ class AdvertisementsController < ApplicationController
   def delete
     @advert = Advertisement.find(params[:id])
     if belongs_to_user(params[:id]) != 0
+      @views = View.where(advert_id: params[:id])
+      @views.find_each do |view|
+        view.destroy
+      end
       @advert.destroy
       render json: { message: "Advertisement was destroyed" }, status: 200
     else
-      render json: { message: "Wrong permition" }, status: 404
+      render json: { message: "Wrong permition" }, status: 403
     end
   end
 
@@ -78,29 +83,24 @@ class AdvertisementsController < ApplicationController
     @id = decoded_token[0]['user_id']
     if User.find(@id).role == "admin"
       @advertisements = Advertisement.where(status: "draft")
-      render json:  @advertisements, status: 200
+      render json: @advertisements, status: 200
     else
-      render json: { message: "Wrong permition" }, status: 404
+      render json: { message: "Wrong permition" }, status: 403
     end
   end
 
-  # SHOW comments to the article (in creation)
-  def show_comments
-    #comments/?page=:npage
-    #1 page = 10 comments
+  # SHOW comments to the article
+  def show_comments        #1 page = 10 comments
+    @page = params[:page]  #comments/?page=:npage
     if Advertisement.find(params[:id]).status != "draft"
-      @comments = Comment.where(adverb_id: params[:id])
-      #@comments.find_each do |comment|
-        #if i == (page - 1) * 10
-        #  ...load to one json
-        #if i == page*10
-        #  exit
-        #render some_array_with_comments.to_json
-      #end offset
-      #or SELECT * FROM comments WHERE advert_id = @var AND id > @var LIMIT 10
+      if @page != nil
+        @comments = Comment.where(adverb_id: params[:id]).limit(10).offset((@page.to_i-1) * 10)
+      else
+        @comments = Comment.where(adverb_id: params[:id]).limit(10).offset(0)
+      end
       render json: @comments, status: 200
     else
-      render json: { message: "Wrong permition" }, status: 404
+      render json: { message: "Wrong permition" }, status: 403
     end
   end
 
@@ -125,6 +125,22 @@ class AdvertisementsController < ApplicationController
       advert_data = {
         status: params[:status],
       }
+    end
+  end
+
+  #Add views to advert
+  def add_view(advert_id)
+    @user_watch = decoded_token[0]['user_id']
+    @advert = Advertisement.find(advert_id)
+    @view = View.find_by(advert_id: advert_id, user_id: @user_watch)
+    if @view
+      @view.update(number: @view.number + 1)
+    else
+      @view = View.create({
+        advert_id: advert_id,
+        user_id: @user_watch,
+      })
+      @advert.update(views: @advert.views + 1)
     end
   end
 
