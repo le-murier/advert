@@ -78,26 +78,21 @@ class AdvertisementsController < ApplicationController
     @id = decoded_token[0]['user_id']
     if User.find(@id).role == "admin"
       @advertisements = Advertisement.where(status: "draft")
-      render json:  @advertisements, status: 200
+      render json: @advertisements, status: 200
     else
       render json: { message: "Wrong permition" }, status: 403
     end
   end
 
-  # SHOW comments to the article (in creation)
-  def show_comments
-    #comments/?page=:npage
-    #1 page = 10 comments
+  # SHOW comments to the article
+  def show_comments        #1 page = 10 comments
+    @page = params[:page]  #comments/?page=:npage
     if Advertisement.find(params[:id]).status != "draft"
-      @comments = Comment.where(adverb_id: params[:id])
-      #@comments.find_each do |comment|
-        #if i == (page - 1) * 10
-        #  ...load to one json
-        #if i == page*10
-        #  exit
-        #render some_array_with_comments.to_json
-      #end offset
-      #or SELECT * FROM comments WHERE advert_id = @var AND id > @var LIMIT 10
+      if @page != nil
+        @comments = Comment.where(adverb_id: params[:id]).limit(10).offset((@page.to_i-1) * 10)
+      else
+        @comments = Comment.where(adverb_id: params[:id]).limit(10).offset(0)
+      end
       render json: @comments, status: 200
     else
       render json: { message: "Wrong permition" }, status: 403
