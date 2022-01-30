@@ -11,5 +11,9 @@ Database creation:
 * rake db:migrate
 * rake db:seed
 
+Tests 
+* bundle exec rspec spec/models/user_spec.rb  - model tests for User model
+* bundle exec rspec spec/requests/users_spec.rb - request tests for User model
+
 
 
