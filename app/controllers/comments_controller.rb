@@ -1,4 +1,4 @@
-tclass CommentsController < ApplicationController
+class CommentsController < ApplicationController
 
   def show
     @comments = Comment.all
