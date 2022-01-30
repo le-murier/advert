@@ -51,7 +51,7 @@ class UsersController < ApplicationController
   # Update User
   def update
     @user = User.find(params[:id])
-    if @user.token == params[:token]
+    if @user.token == get_token()
       @user.update(user_params)
       render json: { message: "User was updated" }, status: 200
     else
@@ -62,7 +62,11 @@ class UsersController < ApplicationController
   # DELETE User
   def delete
     @user = User.find(params[:id])
-    if @user.token == params[:token]
+    if @user.token == get_token()
+      @views = View.where(user_id: params[:id])
+      @views.find_each do |view|
+        view.destroy
+      end
       @user.destroy
       render json: { message: "User was destroyed" }, status: 200
     else

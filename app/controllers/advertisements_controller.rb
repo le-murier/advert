@@ -22,6 +22,7 @@ class AdvertisementsController < ApplicationController
     if params[:id] != "drafts"
       @advert = Advertisement.find(params[:id])
       if @advert && @advert.status != "draft"
+        add_view(params[:id])
         render json: {
             title: @advert.title,
             content: @advert.content,
@@ -66,6 +67,10 @@ class AdvertisementsController < ApplicationController
   def delete
     @advert = Advertisement.find(params[:id])
     if belongs_to_user(params[:id]) != 0
+      @views = View.where(advert_id: params[:id])
+      @views.find_each do |view|
+        view.destroy
+      end
       @advert.destroy
       render json: { message: "Advertisement was destroyed" }, status: 200
     else
@@ -120,6 +125,22 @@ class AdvertisementsController < ApplicationController
       advert_data = {
         status: params[:status],
       }
+    end
+  end
+
+  #Add views to advert
+  def add_view(advert_id)
+    @user_watch = decoded_token[0]['user_id']
+    @advert = Advertisement.find(advert_id)
+    @view = View.find_by(advert_id: advert_id, user_id: @user_watch)
+    if @view
+      @view.update(number: @view.number + 1)
+    else
+      @view = View.create({
+        advert_id: advert_id,
+        user_id: @user_watch,
+      })
+      @advert.update(views: @advert.views + 1)
     end
   end
 
