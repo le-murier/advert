@@ -4,14 +4,14 @@ class AdvertisementsController < ApplicationController
 
   # SHOW ALL advert
   def show
-      @advertisements = Advertisement.where(status: "publicated")
-      @sorting_value = params[:sort]
-      if @sorting_value == "title"
-        render json:  @advertisements.order("title DESC"), status: 200
-      elsif @sorting_value == "date"
-        render json:  @advertisements.order("created_at DESC"), status: 200
-      elsif @sorting_value == "views"
-        render json:  @advertisements.order("views DESC"), status: 200
+      @advertisements = Advertisement.where(status: Status::PUBL)
+      case @sorting_value = params[:sort]
+      when Sorting::TITLE
+        render json: @advertisements.order("#{Sorting::TITLE} DESC"), status: 200
+      when Sorting::DATE
+        render json: @advertisements.order("created_at DESC"), status: 200
+      when Sorting::VIEWS
+        render json:  @advertisements.order("#{Sorting::VIEWS} DESC"), status: 200
       else
         render json:  @advertisements, status: 200
       end
@@ -19,27 +19,17 @@ class AdvertisementsController < ApplicationController
 
   # SHOW advert by id
   def show_id
-    if params[:id] != "drafts"
-      @advert = Advertisement.find(params[:id])
-      if @advert && @advert.status != "draft"
-        add_view(params[:id])
-        render json: {
-            title: @advert.title,
-            content: @advert.content,
-            username: User.find(@advert.user_id).user_name,
-            views: @advert.views,
-        },  status: 200
-      else
-        render json: { message: "Invalid input" }, status: 400
-      end
+    @id = params[:id]
+    if @id != "drafts"
+      render_advert(@id)
     else
-      show_draft
+      show_drafts()
     end
   end
 
   # CREATE advert
   def create
-    @advert = Advertisement.create(advert_params(0))
+    @advert = Advertisement.create(advert_params)
     if @advert.valid?
       render json: { message: "Advertisement was created" }, status: 201
     else
@@ -49,13 +39,10 @@ class AdvertisementsController < ApplicationController
 
   # Update advert
   def update
-    @advert = Advertisement.find(params[:id])
-    case belongs_to_user(params[:id])
-    when 1
-      @advert.update(advert_params(1))
-    when 2
-      @advert.update(advert_params(2))
-    end
+    @id = params[:id]
+    @advert = Advertisement.find(@id)
+    @user = User.find(get_id)
+    update_params(@user.role) if created_by_user(Object::ADVERT, @id)
     if @advert.valid?
       render json: { message: "Advertisement was updated" }, status: 200
     else
@@ -65,12 +52,9 @@ class AdvertisementsController < ApplicationController
 
   # DELETE advert
   def delete
-    @advert = Advertisement.find(params[:id])
-    if belongs_to_user(params[:id]) != 0
-      @views = View.where(advert_id: params[:id])
-      @views.find_each do |view|
-        view.destroy
-      end
+    @id = params[:id]
+    @advert = Advertisement.find(@id)
+    if created_by_user(Object::ADVERT, @id)
       @advert.destroy
       render json: { message: "Advertisement was destroyed" }, status: 200
     else
@@ -79,24 +63,40 @@ class AdvertisementsController < ApplicationController
   end
 
   # SHOW drafts admin only
-  def show_draft
-    @id = decoded_token[0]['user_id']
-    if User.find(@id).role == "admin"
-      @advertisements = Advertisement.where(status: "draft")
+  def show_drafts
+    @id = get_id
+    if User.find(@id).role == Role::ADMIN
+      @advertisements = Advertisement.where(status: Status::DRAFT)
       render json: @advertisements, status: 200
     else
       render json: { message: "Wrong permition" }, status: 403
     end
   end
 
+  def render_advert(id)
+    @advert = Advertisement.find(id)
+    if @advert && @advert.status != Status::DRAFT
+      add_view(id)
+      render json: {
+          title: @advert.title,
+          content: @advert.content,
+          username: User.find(@advert.user_id).user_name,
+          views: @advert.views,
+      },  status: 200
+    else
+      render json: { message: "Invalid input" }, status: 400
+    end
+  end
+
   # SHOW comments to the article
-  def show_comments        #1 page = 10 comments
-    @page = params[:page]  #comments/?page=:npage
-    if Advertisement.find(params[:id]).status != "draft"
+  def show_comments
+    @id = params[:id]
+    @page = params[:page]
+    if Advertisement.find(params[:id]).status != Status::DRAFT
       if @page != nil
-        @comments = Comment.where(adverb_id: params[:id]).limit(10).offset((@page.to_i-1) * 10)
+        @comments = Comment.where(adverb_id: @id).limit(RENDERED_PAGE).offset((@page.to_i-1) * RENDERED_PAGE)
       else
-        @comments = Comment.where(adverb_id: params[:id]).limit(10).offset(0)
+        @comments = Comment.where(adverb_id: @id).limit(RENDERED_PAGE).offset(0)
       end
       render json: @comments, status: 200
     else
@@ -106,31 +106,33 @@ class AdvertisementsController < ApplicationController
 
   private
 
-  def advert_params(status)
-    case status
-    when 0
+  def advert_params()
       advert_data = {
         title: params[:title],
         content: params[:content],
-        user_id: params[:user_id],
+        user_id: get_id,
         status: "draft",
         views: 0,
       }
-    when 1
+  end
+
+  def update_params(role)
+    case role
+    when Role::ADMIN
+      advert_data = {
+        status: params[:status],
+      }
+    when Role::USER
       advert_data = {
         title: params[:title],
         content: params[:content],
-      }
-    when 2
-      advert_data = {
-        status: params[:status],
       }
     end
   end
 
   #Add views to advert
   def add_view(advert_id)
-    @user_watch = decoded_token[0]['user_id']
+    @user_watch = get_id
     @advert = Advertisement.find(advert_id)
     @view = View.find_by(advert_id: advert_id, user_id: @user_watch)
     if @view
@@ -142,18 +144,5 @@ class AdvertisementsController < ApplicationController
       })
       @advert.update(views: @advert.views + 1)
     end
-  end
-
-  def belongs_to_user(id)
-    @advert = Advertisement.find(id)
-    @id = decoded_token[0]['user_id']
-    @user = User.find(@id)
-    @result = 0
-    if @advert.user_id.to_s == params[:user_id] && @user.role != "admin"
-      @result = 1
-    elsif @user.role == "admin"
-      @result = 2
-    end
-    @result
   end
 end

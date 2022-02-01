@@ -40,4 +40,50 @@ class ApplicationController < ActionController::API
   def authorized
     render json: { message: 'Please log in' }, status: :unauthorized unless logged_in?
   end
+
+  def created_by_user(object, object_id)
+    @token_id = get_id
+    @user = User.find(@token_id)
+    true if @user.role == Role::ADMIN
+    case object
+    when Object::USER
+      true if object_id == @token_id
+    when Object::ADVERT
+      @advert = Advertisement.find(object_id)
+      true if @advert.user_id == @token_id
+    when Object::COMMENT
+      @comment = Comment.find(object_id)
+      true if @comment.user_id == @token_id
+    else
+      false
+    end
+  end
+
+  def get_id
+    decoded_token[0]['user_id']
+  end
+
+  RENDERED_PAGE = 10
+
+  module Role
+    ADMIN = "admin"
+    USER = "user"
+  end
+
+  module Sorting
+    TITLE = "title"
+    DATE = "date"
+    VIEWS = "views"
+  end
+
+  module Status
+    PUBL = "publicated"
+    DRAFT = "draft"
+  end
+
+  module Object
+    USER = 1
+    ADVERT = 2
+    COMMENT = 3
+  end
 end

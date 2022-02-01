@@ -16,9 +16,9 @@ class UsersController < ApplicationController
 
   # SHOW all admins
   def show_admins
-    @user = User.find(params[:id])
-    if @user.role == "admin"
-      @admins =  User.find_by(role: "admin")
+    @user = User.find(get_id)
+    if @user.role == Role::ADMIN
+      @admins =  User.find_by(role: Role::ADMIN)
       render json:  @admins, status: 200
     else
       render json: { message: "Wrong user rights" }, status: 403
@@ -50,9 +50,11 @@ class UsersController < ApplicationController
 
   # Update User
   def update
-    @user = User.find(params[:id])
-    if @user.token == get_token()
-      @user.update(user_params)
+    @id = params[:id]
+    @user = User.find(@id)
+    @token_user = User.find(get_id)
+    @user.update(@token_user.role) if created_by_user(Object::USER, @id)
+    if @user.valid?
       render json: { message: "User was updated" }, status: 200
     else
       render json: { message: "Wrong user rights" }, status: 403
@@ -61,12 +63,9 @@ class UsersController < ApplicationController
 
   # DELETE User
   def delete
-    @user = User.find(params[:id])
-    if @user.token == get_token()
-      @views = View.where(user_id: params[:id])
-      @views.find_each do |view|
-        view.destroy
-      end
+    @id = params[:id]
+    @user = User.find(@id)
+    if created_by_user(Object::USER, @id)
       @user.destroy
       render json: { message: "User was destroyed" }, status: 200
     else
@@ -81,27 +80,33 @@ class UsersController < ApplicationController
       @user.update(token: nil)
       render json: { message: "User was logged out" }, status: 200
     else
-      render json: { message: "Wrong user rights" }, status: 403
+      render json: { message: "Wrong user rights", gh: @user }, status: 403
     end
   end
 
   private
 
   def user_params
-    @valid_password = !!params[:password].match(/^(?=.*[a-zA-Z])(?=.*[0-9]).{6,}$/)
-    @valid_email = !!params[:email].match(/\A[\w.+-]+@\w+\.\w+\z/)
-    if @valid_password && @valid_email
-      @password = params[:password]
-      @email = params[:email]
-    else
-      @password = null
-      @email = null
-    end
       user_data = {
         user_name: params[:user_name],
-        email: @email,
-        password_digest: BCrypt::Password.create(@password),
-        role: params[:role]
+        email: params[:email],
+        password: params[:password],
+        role: "user",
       }
+  end
+
+  def update_params(role)
+    case role
+    when Role::ADMIN
+      advert_data = {
+        role: params[:role],
+      }
+    when Role::USER
+      advert_data = {
+        user_name: params[:user_name],
+        email: params[:email],
+        password: params[:password],
+      }
+    end
   end
 end

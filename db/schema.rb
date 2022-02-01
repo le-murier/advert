@@ -38,9 +38,9 @@ ActiveRecord::Schema.define(version: 2022_01_30_184127) do
     t.string "email", null: false
     t.string "password_digest", null: false
     t.string "role"
+    t.string "token"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "token"
   end
 
   create_table "views", force: :cascade do |t|

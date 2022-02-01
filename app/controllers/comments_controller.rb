@@ -15,8 +15,9 @@ class CommentsController < ApplicationController
   end
 
   def update
-    @comment = Comment.find(params[:id])
-    if belongs_to_user(@comment.user_id)
+    @id = params[:id]
+    @comment = Comment.find(@id)
+    if created_by_user(Object::COMMENT, @id)
       @comment.update(content: params[:content])
       render json: { message: "Comment was updated" }, status: 200
     else
@@ -25,8 +26,9 @@ class CommentsController < ApplicationController
   end
 
   def delete
-    @comment = Comment.find(params[:id])
-    if belongs_to_user(@comment.user_id)
+    @id = params[:id]
+    @comment = Comment.find(@id)
+    if created_by_user(Object::COMMENT, @id)
       @comment.destroy
       render json: { message: "Comment was destroyed" }, status: 200
     else
@@ -40,16 +42,7 @@ class CommentsController < ApplicationController
     advert_data = {
         adverb_id: params[:adverb_id],
         content: params[:content],
-        user_id: decoded_token[0]['user_id'],
+        user_id: get_id,
     }
-  end
-
-  def belongs_to_user(user_id)
-    @id = decoded_token[0]['user_id']
-    @result = false
-    if user_id == @id || User.find(@id).role == "admin"
-      @result = true
-    end
-    @result
   end
 end
