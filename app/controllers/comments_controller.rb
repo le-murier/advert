@@ -2,15 +2,15 @@ class CommentsController < ApplicationController
 
   def show
     @comment = Comment.find(params[:id])
-    render json: @comment, status: 200
+    render json: @comment, status: :ok
   end
 
   def create
     @comment = Comment.create(advert_params)
     if @comment.valid?
-      render json: { message: "Comment was created" }, status: 201
+      render json: { message: "Comment was created" }, status: :created
     else
-      render json: { error: "Invalid data" }, status: 400
+      render json: { error: "Invalid data" }, status: :bad_request
     end
   end
 
@@ -19,9 +19,9 @@ class CommentsController < ApplicationController
     @comment = Comment.find(@id)
     if created_by_user(Object::COMMENT, @id)
       @comment.update(content: params[:content])
-      render json: { message: "Comment was updated" }, status: 200
+      render json: { message: "Comment was updated" }, status: :ok
     else
-      render json: { error: "Wrong permition" }, status: 403
+      render json: { error: "Wrong permition" }, status: :forbidden
     end
   end
 
@@ -30,9 +30,9 @@ class CommentsController < ApplicationController
     @comment = Comment.find(@id)
     if created_by_user(Object::COMMENT, @id)
       @comment.destroy
-      render json: { message: "Comment was destroyed" }, status: 200
+      render json: { message: "Comment was destroyed" }, status: :ok
     else
-      render json: { error: "Wrong permition" }, status: 403
+      render json: { error: "Wrong permition" }, status: :forbidden
     end
   end
 

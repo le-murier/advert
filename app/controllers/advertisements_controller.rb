@@ -2,22 +2,20 @@ class AdvertisementsController < ApplicationController
   before_action :authorized,
   only: [:show_id, :create, :update, :delete, :show_draft, :show_comments]
 
-  # SHOW ALL advert
   def show
       @advertisements = Advertisement.where(status: Status::PUBL)
       case @sorting_value = params[:sort]
       when Sorting::TITLE
-        render json: @advertisements.order("#{Sorting::TITLE} DESC"), status: 200
+        render json: @advertisements.order("#{Sorting::TITLE} DESC"), status: :ok
       when Sorting::DATE
-        render json: @advertisements.order("created_at DESC"), status: 200
+        render json: @advertisements.order("created_at DESC"), status: :ok
       when Sorting::VIEWS
-        render json:  @advertisements.order("#{Sorting::VIEWS} DESC"), status: 200
+        render json:  @advertisements.order("#{Sorting::VIEWS} DESC"), status: :ok
       else
-        render json:  @advertisements, status: 200
+        render json:  @advertisements, status: :ok
       end
   end
 
-  # SHOW advert by id
   def show_id
     @id = params[:id]
     if @id != "drafts"
@@ -27,49 +25,45 @@ class AdvertisementsController < ApplicationController
     end
   end
 
-  # CREATE advert
   def create
     @advert = Advertisement.create(advert_params)
     if @advert.valid?
-      render json: { message: "Advertisement was created" }, status: 201
+      render json: { message: "Advertisement was created" }, status: :created
     else
-      render json: { error: "Invalid data" }, status: 400
+      render json: { error: "Invalid data" }, status: :bad_request
     end
   end
 
-  # Update advert
   def update
     @id = params[:id]
     @advert = Advertisement.find(@id)
     @user = User.find(get_id)
-    update_params(@user.role) if created_by_user(Object::ADVERT, @id)
+    @advert.update(update_params(@user.role)) if created_by_user(Object::ADVERT, @id)
     if @advert.valid?
-      render json: { message: "Advertisement was updated" }, status: 200
+      render json: { message: "Advertisement was updated" }, status: :ok
     else
-      render json: { message: "Wrong params" }, status: 400
+      render json: { message: "Wrong params" }, status: :bad_request
     end
   end
 
-  # DELETE advert
   def delete
     @id = params[:id]
     @advert = Advertisement.find(@id)
     if created_by_user(Object::ADVERT, @id)
       @advert.destroy
-      render json: { message: "Advertisement was destroyed" }, status: 200
+      render json: { message: "Advertisement was destroyed" }, status: :ok
     else
-      render json: { message: "Wrong permition" }, status: 403
+      render json: { message: "Wrong permition" }, status: :forbidden
     end
   end
 
-  # SHOW drafts admin only
   def show_drafts
     @id = get_id
     if User.find(@id).role == Role::ADMIN
       @advertisements = Advertisement.where(status: Status::DRAFT)
-      render json: @advertisements, status: 200
+      render json: @advertisements, status: :ok
     else
-      render json: { message: "Wrong permition" }, status: 403
+      render json: { message: "Wrong permition" }, status: :forbidden
     end
   end
 
@@ -84,11 +78,10 @@ class AdvertisementsController < ApplicationController
           views: @advert.views,
       },  status: 200
     else
-      render json: { message: "Invalid input" }, status: 400
+      render json: { message: "Invalid input" }, status: :bad_request
     end
   end
 
-  # SHOW comments to the article
   def show_comments
     @id = params[:id]
     @page = params[:page]
@@ -98,9 +91,9 @@ class AdvertisementsController < ApplicationController
       else
         @comments = Comment.where(adverb_id: @id).limit(RENDERED_PAGE).offset(0)
       end
-      render json: @comments, status: 200
+      render json: @comments, status: :ok
     else
-      render json: { message: "Wrong permition" }, status: 403
+      render json: { message: "Wrong permition" }, status: :forbidden
     end
   end
 
@@ -130,7 +123,6 @@ class AdvertisementsController < ApplicationController
     end
   end
 
-  #Add views to advert
   def add_view(advert_id)
     @user_watch = get_id
     @advert = Advertisement.find(advert_id)
