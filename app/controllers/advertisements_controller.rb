@@ -1,6 +1,6 @@
 class AdvertisementsController < ApplicationController
   before_action :authorized,
-  only: [:show_id, :create, :update, :delete, :show_draft, :show_comments]
+  only: [:show_id, :create, :update, :delete, :show_drafts, :show_comments]
 
   def show
       @advertisements = Advertisement.where(status: Status::PUBL)
@@ -21,7 +21,7 @@ class AdvertisementsController < ApplicationController
     if @id != "drafts"
       render_advert(@id)
     else
-      show_drafts()
+      show_drafts
     end
   end
 
@@ -93,14 +93,14 @@ class AdvertisementsController < ApplicationController
       end
       render json: @comments, status: :ok
     else
-      render json: { message: "Wrong permition" }, status: :forbidden
+      render json: { message: "Wrong permission" }, status: :forbidden
     end
   end
 
   private
 
-  def advert_params()
-      advert_data = {
+  def advert_params
+    advert_data = {
         title: params[:title],
         content: params[:content],
         user_id: get_id,
@@ -120,6 +120,8 @@ class AdvertisementsController < ApplicationController
         title: params[:title],
         content: params[:content],
       }
+    else
+      advert_data = {}
     end
   end
 

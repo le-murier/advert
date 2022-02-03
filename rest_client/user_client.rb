@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require 'rubygems'
 require 'rest_client'
 require 'json'
@@ -50,8 +51,8 @@ class UserClient
     )
     @token = JSON.parse(@response)["token"]
     @id = JSON.parse(@response)["id"]
-    refresh_headers()
-    return @token
+    refresh_headers
+    @token
   end
 
   def update(user_name, email, password)
@@ -95,6 +96,8 @@ class UserClient
         "user_name": @user_name,
         "password": @password
       }
+    else
+      params = { }
     end
   end
 

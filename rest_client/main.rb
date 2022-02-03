@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require_relative 'user_client'
 require_relative  'advert_client'
 require_relative 'coment_client'

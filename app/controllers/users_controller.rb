@@ -18,7 +18,7 @@ class UsersController < ApplicationController
       @admins =  User.find_by(role: Role::ADMIN)
       render json:  @admins, status: :ok
     else
-      render json: { message: "Wrong user rights", role: @user.role}, status: :forbidden
+      render json: { message: "Wrong user rights" }, status: :forbidden
     end
   end
 

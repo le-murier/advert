@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require 'rubygems'
 require 'rest_client'
 require 'json'
@@ -24,11 +25,11 @@ class CommentClient
   end
 
   def create
-    refresh_headers()
+    refresh_headers
     @response = RestClient::Request.execute(
       method: :post,
       url: Url::COMMENTS,
-      payload: get_json(),
+      payload: get_json,
       headers: @headers
     )
     @id = JSON.parse(@response)["id"]
@@ -54,8 +55,8 @@ class CommentClient
 
   private
 
-  def get_json()
-      params = {
+  def get_json
+    params = {
         "adverb_id": @adverb_id,
         "content": @content,
       }

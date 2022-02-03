@@ -21,7 +21,7 @@ class CommentsController < ApplicationController
       @comment.update(content: params[:content])
       render json: { message: "Comment was updated" }, status: :ok
     else
-      render json: { error: "Wrong permition" }, status: :forbidden
+      render json: { error: "Wrong permission" }, status: :forbidden
     end
   end
 
@@ -32,13 +32,13 @@ class CommentsController < ApplicationController
       @comment.destroy
       render json: { message: "Comment was destroyed" }, status: :ok
     else
-      render json: { error: "Wrong permition" }, status: :forbidden
+      render json: { error: "Wrong permission" }, status: :forbidden
     end
   end
 
   private
 
-  def advert_params()
+  def advert_params
     advert_data = {
         adverb_id: params[:adverb_id],
         content: params[:content],
