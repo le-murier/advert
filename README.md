@@ -8,13 +8,18 @@ Versions:
 * postgres (PostgreSQL) 13.4
 
 Database creation:
-* rake db:create
-* rake db:migrate
-* rake db:seed
+* $ rake db:create
+* $ rake db:migrate
+* $ rake db:seed
 
 Tests 
-* bundle exec rspec spec/models/user_spec.rb  - model tests for User model
-* bundle exec rspec spec/requests/users_spec.rb - request tests for User model
+* $ bundle exec rspec spec/models/user_spec.rb  - model tests for User model
+* $ bundle exec rspec spec/requests/users_spec.rb - request tests for User model
+
+Rest client
+* $ bundle install 'rest_client'
+* $ bundle install 'json'
+* $ ruby rest_client/main.rb 
 
 
 
