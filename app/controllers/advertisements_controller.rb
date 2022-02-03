@@ -10,9 +10,9 @@ class AdvertisementsController < ApplicationController
       when Sorting::DATE
         render json: @advertisements.order("created_at DESC"), status: :ok
       when Sorting::VIEWS
-        render json:  @advertisements.order("#{Sorting::VIEWS} DESC"), status: :ok
+        render json: @advertisements.order("#{Sorting::VIEWS} DESC"), status: :ok
       else
-        render json:  @advertisements, status: :ok
+        render json: @advertisements, status: :ok
       end
   end
 
@@ -28,7 +28,7 @@ class AdvertisementsController < ApplicationController
   def create
     @advert = Advertisement.create(advert_params)
     if @advert.valid?
-      render json: { message: "Advertisement was created" }, status: :created
+      render json: { message: "Advertisement was created", id: @advert.id }, status: :created
     else
       render json: { error: "Invalid data" }, status: :bad_request
     end

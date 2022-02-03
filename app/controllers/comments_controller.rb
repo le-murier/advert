@@ -8,7 +8,7 @@ class CommentsController < ApplicationController
   def create
     @comment = Comment.create(advert_params)
     if @comment.valid?
-      render json: { message: "Comment was created" }, status: :created
+      render json: { message: "Comment was created", id: @comment.id }, status: :created
     else
       render json: { error: "Invalid data" }, status: :bad_request
     end

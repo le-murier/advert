@@ -1,111 +1,94 @@
 require 'rubygems'
 require 'rest_client'
 require 'json'
-
-BASE_URI = 'http://localhost:3000'
-
-module Action
-  CREATE = 1
-  LOGIN = 2
-  UPDATE = 3
-end
-
-module Url
-  ADMINS = "#{BASE_URI}/users/admins"
-  USERS = "#{BASE_URI}/users/"
-  LOGIN = "#{BASE_URI}/login"
-  LOGOUT = "#{BASE_URI}/log_out"
-end
+require_relative 'rest_const'
 
 class UserClient
-  @@url = Url::USERS
   def initialize(user_name, email, password)
+    @id = -1
     @token = " "
     @user_name = user_name
     @email = email
     @password = password
-    @headers = { "Content-Type" => "application/x-www-form-urlencoded" }
+    @headers = { "Content-Type" => "application/x-www-form-urlencoded",
+        "Authorization": "Bearer #{@token}"}
   end
 
-  def GetUser
-    RestClient.get(@@url)
-  end
+  attr_accessor :token, :id
 
-  def GetUserByIg(id)
+  def get
     RestClient::Request.execute(
       method: :get,
-      url: GetUrlId(id),
-      payload: { "id": id },
-      token: @token,
+      url: Url::USERS,
       headers: @headers
     )
   end
 
-  def GetAdmins
+  def get_by(id)
     RestClient::Request.execute(
       method: :get,
-      url: Url::ADMINS,
-      token: @token,
+      url: get_url_id(id),
       headers: @headers
     )
   end
 
-  def CreateUser
-    RestClient::Request.execute(
+  def create
+    @response = RestClient::Request.execute(
       method: :post,
       url: Url::USERS,
-      payload: GetJson(Action::CREATE),
+      payload: get_json(Action::CREATE),
       headers: @headers
     )
   end
 
-  def Login
+  def login
     @response = RestClient::Request.execute(
       method: :post,
       url: Url::LOGIN,
-      payload: GetJson(Action::LOGIN),
+      payload: get_json(Action::LOGIN),
       headers: @headers
     )
     @token = JSON.parse(@response)["token"]
+    @id = JSON.parse(@response)["id"]
+    refresh_headers()
+    return @token
   end
 
-  def UpdateUser(id)
+  def update(user_name, email, password)
     RestClient::Request.execute(
       method: :put,
-      url: GetUrlId(id),
-      payload: GetJson(Action::UPDATE),
-      token: @token,
+      url: get_url_id(@id),
+      payload: get_update_json(user_name, email, password),
       headers: @headers
     )
   end
 
-  def DeleteUser(id)
+  def delete(id)
     RestClient::Request.execute(
       method: :delete,
-      url: GetUrlId(id),
-      token: @token,
+      url: get_url_id(id),
       headers: @headers
     )
   end
 
-  def LogoutUser(id)
+  def logout
     RestClient::Request.execute(
       method: :post,
       url: Url::LOGOUT,
-      token: @token,
       headers: @headers
     )
   end
 
   private
 
-  def GetJson(action)
+  def get_json(action)
     case action
-    when Action::CREATE || Action::UPDATE
+    when Action::CREATE
       params = {
         "user_name": @user_name,
         "email": @email,
-        "password": @password
+        "password": @password,
+        "role": "user"
       }
     when Action::LOGIN
       params = {
@@ -115,7 +98,21 @@ class UserClient
     end
   end
 
-  def GetUrlId(id)
+  def get_update_json(user_name, email, password)
+    params = {
+      "user_name": @user_name,
+      "email": @email,
+      "password": @password,
+      "role": "user"
+    }
+  end
+
+  def get_url_id(id)
     Url::USERS + id.to_s
+  end
+
+  def refresh_headers
+    @headers = { "Content-Type" => "application/x-www-form-urlencoded",
+        "Authorization": "Bearer #{@token}"}
   end
 end

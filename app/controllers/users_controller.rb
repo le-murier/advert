@@ -18,7 +18,7 @@ class UsersController < ApplicationController
       @admins =  User.find_by(role: Role::ADMIN)
       render json:  @admins, status: :ok
     else
-      render json: { message: "Wrong user rights" }, status: :forbidden
+      render json: { message: "Wrong user rights", role: @user.role}, status: :forbidden
     end
   end
 
@@ -37,7 +37,7 @@ class UsersController < ApplicationController
     if @user && BCrypt::Password.new(@user.password_digest) == @s_password
       token = encode_token({ user_id: @user.id })
       @user.update(token: token)
-      render json: { token: token }, status: :ok
+      render json: { token: token, id: @user.id }, status: :ok
     else
       render json: { error: "Invalid username or password" },
        status: :bad_request
@@ -45,11 +45,12 @@ class UsersController < ApplicationController
   end
 
   def update
-    @id = params[:id]
-    @user = User.find(@id)
+    @id = params[:id].to_i
+    @user = User.find(params[:id])
     @token_user = User.find(get_id)
-    @user.update(@token_user.role) if created_by_user(Object::USER, @id)
-    if @user.valid?
+    if created_by_user(Object::USER, @id)
+      @update_json = update_params(@token_user.role)
+      @user.update(@update_json)
       render json: { message: "User was updated" }, status: :ok
     else
       render json: { message: "Wrong user rights" }, status: :forbidden
@@ -57,8 +58,8 @@ class UsersController < ApplicationController
   end
 
   def delete
-    @id = params[:id]
-    @user = User.find(@id)
+    @id = params[:id].to_i
+    @user = User.find(params[:id])
     if created_by_user(Object::USER, @id)
       @user.destroy
       render json: { message: "User was destroyed" }, status: :ok
@@ -74,7 +75,7 @@ class UsersController < ApplicationController
       @user.update(token: nil)
       render json: { message: "User was logged out" }, status: :ok
     else
-      render json: { message: "Wrong user rights", gh: @user },
+      render json: { message: "Wrong user rights" },
        status: :forbidden
     end
   end

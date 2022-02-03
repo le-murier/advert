@@ -1,0 +1,42 @@
+{"message":"User was created"}
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyfQ.4aV9sPAQmgK4hTBPihEXF3CVkzLDz3jsmWShy2TtQfU
+{"message":"User was logged out"}
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyfQ.4aV9sPAQmgK4hTBPihEXF3CVkzLDz3jsmWShy2TtQfU
+[{"id":1,"email":"admin@gmail.com","user_name":"admin"},{"id":2,"email":"usre@gmail.com","user_name":"newsr1"}]
+{"message":"User was updated"}
+{"id":2,"email":"usre@gmail.com","user_name":"newsr1"}
+{"message":"User was destroyed"}
+{"message":"User was created"}
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozfQ.ocFaRU1kYVGQ6vTH0wuz5Wn_HcmUbBzB6mlcgqoUcho
+{"message":"User was logged out"}
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozfQ.ocFaRU1kYVGQ6vTH0wuz5Wn_HcmUbBzB6mlcgqoUcho
+[{"id":1,"email":"admin@gmail.com","user_name":"admin"},{"id":3,"email":"usre@gmail.com","user_name":"newsr1"}]
+{"message":"User was updated"}
+{"id":3,"email":"usre@gmail.com","user_name":"newsr1"}
+{"message":"User was destroyed"}
+{"message":"User was created"}
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo1fQ.a1AOLLCShcjFX7EEqjwUd-EahIH4hbrGVHHu1sk4-c4
+{"message":"User was logged out"}
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo1fQ.a1AOLLCShcjFX7EEqjwUd-EahIH4hbrGVHHu1sk4-c4
+[{"id":1,"email":"admin@gmail.com","user_name":"admin"},{"id":4,"email":"usre@gmail.com","user_name":"newsr1"},{"id":5,"email":"usrye@gmail.com","user_name":"newyr1"}]
+{"message":"User was updated"}
+{"id":5,"email":"usrye@gmail.com","user_name":"newyr1"}
+{"message":"User was destroyed"}
+{"message":"User was created"}
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3fQ.VNqXj0cIwQRJ-dAKgfdWMF9Hmmh6d8wc7dYj1hdm09U
+{"message":"User was logged out"}
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3fQ.VNqXj0cIwQRJ-dAKgfdWMF9Hmmh6d8wc7dYj1hdm09U
+[{"id":1,"email":"admin@gmail.com","user_name":"admin"},{"id":4,"email":"usre@gmail.com","user_name":"newsr1"},{"id":6,"email":"usrye@gmail.com","user_name":"newyr1"},{"id":7,"email":"us5rye@gmail.com","user_name":"newy5r1"}]
+{"message":"User was updated"}
+{"id":7,"email":"us5rye@gmail.com","user_name":"newy5r1"}
+{"message":"User was destroyed"}
+{"message":"User was created"}
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo5fQ.nDT3i82YcoghVvVD8lT2DFplmJr-G8q6oIMCVUba7QY
+{"message":"User was logged out"}
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo5fQ.nDT3i82YcoghVvVD8lT2DFplmJr-G8q6oIMCVUba7QY
+[{"id":1,"email":"admin@gmail.com","user_name":"admin"},{"id":4,"email":"usre@gmail.com","user_name":"newsr1"},{"id":6,"email":"usrye@gmail.com","user_name":"newyr1"},{"id":8,"email":"us5rye@gmail.com","user_name":"newy5r1"},{"id":9,"email":"usety5@gmail.com","user_name":"usety"}]
+{"message":"User was updated"}
+{"id":9,"email":"usety5@gmail.com","user_name":"usety"}
+
+{"message":"Advertisement was created","id":4}
+{"message":"Advertisement was updated"}

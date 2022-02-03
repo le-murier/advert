@@ -42,20 +42,20 @@ class ApplicationController < ActionController::API
   end
 
   def created_by_user(object, object_id)
-    @token_id = get_id
-    @user = User.find(@token_id)
-    true if @user.role == Role::ADMIN
+    @current_user_id = get_id
+    @current_user = User.find(@current_user_id)
+    return true if @current_user.role == Role::ADMIN
     case object
     when Object::USER
-      true if object_id == @token_id
+      return true if object_id == @current_user_id
     when Object::ADVERT
-      @advert = Advertisement.find(object_id)
-      true if @advert.user_id == @token_id
+      @current_advert = Advertisement.find(object_id)
+      return true if @current_advert.user_id == @current_user_id
     when Object::COMMENT
-      @comment = Comment.find(object_id)
-      true if @comment.user_id == @token_id
+      @current_comment = Comment.find(object_id)
+      return true if @current_comment.user_id == @current_user_id
     else
-      false
+      return false
     end
   end
 

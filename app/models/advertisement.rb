@@ -3,5 +3,5 @@ class Advertisement < ApplicationRecord
   has_many :comment
   has_many :view
   validates :title, uniqueness: { case_sensitive: false }
-  validates :content, length: { in: 30..300 }
+  validates :content, length: { in: 10..300 }
 end

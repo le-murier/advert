@@ -1,81 +1,72 @@
 require 'rubygems'
 require 'rest_client'
 require 'json'
-
-BASE_URI = 'http://localhost:3000'
-
-module Action
-  CREATE = 1
-  UPDATE = 2
-end
-
-module Url
-  COMMENTS = "#{BASE_URI}/comments"
-end
+require_relative  'rest_const'
 
 class CommentClient
   def initialize(adverb_id, content)
     @token = " "
+    @id = -1
     @adverb_id = adverb_id
     @content = content
-    @headers = { "Content-Type" => "application/x-www-form-urlencoded" }
+    @headers = { "Content-Type" => "application/x-www-form-urlencoded",
+        "Authorization": "Bearer #{@token}"}
   end
 
-  def GetCommentByIg(id)
+  attr_accessor :token, :id
+
+  def get_by(id)
     RestClient::Request.execute(
       method: :get,
-      url: GetUrlId(id),
-      payload: { "id": id },
-      token: @token,
+      url: get_url_by(id),
       headers: @headers
     )
   end
 
-  def CreateComment
-    RestClient::Request.execute(
+  def create
+    refresh_headers()
+    @response = RestClient::Request.execute(
       method: :post,
       url: Url::COMMENTS,
-      payload: GetJson(Action::CREATE),
+      payload: get_json(),
       headers: @headers
     )
+    @id = JSON.parse(@response)["id"]
+    @response
   end
 
-  def UpdateComment(id)
+  def update(id, content)
     RestClient::Request.execute(
       method: :put,
-      url: GetUrlId(id),
-      payload: GetJson(Action::UPDATE),
-      token: @token,
+      url: get_url_by(id),
+      payload: { "content": content },
       headers: @headers
     )
   end
 
-  def DeleteComment(id)
+  def delete(id)
     RestClient::Request.execute(
       method: :delete,
-      url: GetUrlId(id),
-      token: @token,
+      url: get_url_by(id),
       headers: @headers
     )
   end
 
   private
 
-  def GetJson(action)
-    case action
-    when Action::CREATE
+  def get_json()
       params = {
         "adverb_id": @adverb_id,
         "content": @content,
       }
-    when Action::UPDATE
-      params = {
-        "content": @content,
-      }
-    end
   end
 
-  def GetUrlId(id)
+  def get_url_by(id)
     Url::COMMENTS + id.to_s
+  end
+
+  def refresh_headers
+    @headers = { "Content-Type" => "application/x-www-form-urlencoded",
+        "Authorization": "Bearer #{@token}"}
   end
 end

@@ -1,95 +1,88 @@
 require 'rubygems'
 require 'rest_client'
 require 'json'
-
-BASE_URI = 'http://localhost:3000'
-
-module Url
-  ADVERTS = "#{BASE_URI}/advertisements/"
-  DRAFTS = "#{BASE_URI}/drafts"
-end
+require_relative  'rest_const'
 
 class AdvertClient
   def initialize(title, content)
+    @id = -1
     @token = " "
     @title = title
     @content = content
-    @headers = { "Content-Type" => "application/x-www-form-urlencoded" }
+    @headers = { "Content-Type" => "application/x-www-form-urlencoded",
+        "Authorization": "Bearer #{@token}"}
   end
 
-  def GetAdverts
+  attr_accessor :token, :id
+
+  def get
     RestClient.get(Url::ADVERTS)
   end
 
-  def GetAdvertByIg(id)
+  def get_by(id)
     RestClient::Request.execute(
       method: :get,
-      url: GetUrlId(id),
-      payload: { "id": id },
-      token: @token,
+      url: get_url(id),
       headers: @headers
     )
   end
 
-  def GetDrafts
-    RestClient::Request.execute(
-      method: :get,
-      url: Url::DRAFTS,
-      token: @token,
-      headers: @headers
-    )
-  end
-
-  def CreateAdvert
-    RestClient::Request.execute(
+  def create
+    refresh_headers
+    @response = RestClient::Request.execute(
       method: :post,
       url: Url::ADVERTS,
-      payload: GetJson(),
+      payload: get_json(@title, @content),
       headers: @headers
     )
+    @id = JSON.parse(@response)["id"]
+    @response
   end
 
-  def UpdateAdvert(id)
+  def update(id, title, content)
     RestClient::Request.execute(
       method: :put,
-      url: GetUrlId(id),
-      payload: GetJson(),
+      url: get_url(id),
+      payload: get_json(title, content),
       headers: @headers
     )
   end
 
-  def DeleteUser(id)
+  def delete(id)
     RestClient::Request.execute(
       method: :delete,
-      url: GetUrlId(id),
-      payload: GetJson(),
+      url: get_url(id),
       headers: @headers
     )
   end
 
-  def ShowAdvertComment(id)
+  def show_comment(id)
     RestClient::Request.execute(
       method: :get,
-      url: UrlComment(id),
-      token: @token,
+      url: url_comment(id),
       headers: @headers
     )
   end
 
   private
 
-  def GetJson()
+  def get_json(title, content)
       params = {
-        "title": @user_name,
-        "content": @email,
+        "title": title,
+        "content": content,
       }
   end
 
-  def GetUrlId(id)
+  def get_url(id)
     Url::ADVERTS + id.to_s
   end
 
-  def UrlComment(id)
-    GetUrlId(id) + "/comments"
+  def url_comment(id)
+    get_url(id) + "/comments"
+  end
+
+  def refresh_headers
+    @headers = { "Content-Type" => "application/x-www-form-urlencoded",
+        "Authorization": "Bearer #{@token}"}
   end
 end

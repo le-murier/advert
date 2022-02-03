@@ -1,12 +1,12 @@
 @user0 = User.create(
-     user_name: "testUser0",
+     user_name: "testuser0",
      email: "testUser0@gmail.com",
      password: "securepassword123",
      role: "user",
 )
 
 @user1 = User.create(
-      user_name: "testUser1",
+      user_name: "testuser1",
       email: "testUser1@gmail.com",
       password: "securepassword456",
       role: "user",
@@ -28,7 +28,7 @@
 )
 
 @advert1 = Advertisement.create(
-      title: "Draft",
+      title: "Draft, we dont se u",
       content: "I don't know what to write...",
       user_id: @user1.id,
       status: "draft",
