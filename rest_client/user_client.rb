@@ -18,66 +18,94 @@ class UserClient
   attr_accessor :token, :id
 
   def get
-    RestClient::Request.execute(
-      method: :get,
-      url: Url::USERS,
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :get,
+        url: USERS_URI,
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def get_by(id)
-    RestClient::Request.execute(
-      method: :get,
-      url: get_url_id(id),
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :get,
+        url: get_url_id(id),
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def create
-    @response = RestClient::Request.execute(
-      method: :post,
-      url: Url::USERS,
-      payload: get_json(Action::CREATE),
-      headers: @headers
-    )
+    begin
+      @response = RestClient::Request.execute(
+        method: :post,
+        url: USERS_URI,
+        payload: get_json(Action::CREATE),
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def login
-    @response = RestClient::Request.execute(
-      method: :post,
-      url: Url::LOGIN,
-      payload: get_json(Action::LOGIN),
-      headers: @headers
-    )
-    @token = JSON.parse(@response)["token"]
-    @id = JSON.parse(@response)["id"]
-    refresh_headers
-    @token
+    begin
+      @response = RestClient::Request.execute(
+        method: :post,
+        url: LOGIN_URI,
+        payload: get_json(Action::LOGIN),
+        headers: @headers
+      )
+      @token = JSON.parse(@response)["token"]
+      @id = JSON.parse(@response)["id"]
+      refresh_headers
+      @token
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def update(user_name, email, password)
-    RestClient::Request.execute(
-      method: :put,
-      url: get_url_id(@id),
-      payload: get_update_json(user_name, email, password),
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :put,
+        url: get_url_id(@id),
+        payload: get_update_json(user_name, email, password),
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def delete(id)
-    RestClient::Request.execute(
-      method: :delete,
-      url: get_url_id(id),
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :delete,
+        url: get_url_id(id),
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def logout
-    RestClient::Request.execute(
-      method: :post,
-      url: Url::LOGOUT,
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :post,
+        url: LOGOUT_URI,
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   private
@@ -111,7 +139,7 @@ class UserClient
   end
 
   def get_url_id(id)
-    Url::USERS + id.to_s
+    USERS_URI + id.to_s
   end
 
   def refresh_headers

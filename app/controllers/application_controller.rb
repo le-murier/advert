@@ -41,18 +41,18 @@ class ApplicationController < ActionController::API
     render json: { message: 'Please log in' }, status: :unauthorized unless logged_in?
   end
 
-  def created_by_user(object, object_id)
+  def created_by_user(component, component_id)
     @current_user_id = get_id
     @current_user = User.find(@current_user_id)
     return true if @current_user.role == Role::ADMIN
-    case object
-    when Object::USER
-      return true if object_id == @current_user_id
-    when Object::ADVERT
-      @current_advert = Advertisement.find(object_id)
+    case component
+    when AppComponent::USER
+      return true if component_id == @current_user_id
+    when AppComponent::ADVERT
+      @current_advert = Advertisement.find(component_id)
       return true if @current_advert.user_id == @current_user_id
-    when Object::COMMENT
-      @current_comment = Comment.find(object_id)
+    when AppComponent::COMMENT
+      @current_comment = Comment.find(component_id)
       return true if @current_comment.user_id == @current_user_id
     else
       return false
@@ -81,7 +81,7 @@ class ApplicationController < ActionController::API
     DRAFT = "draft"
   end
 
-  module Object
+  module AppComponent
     USER = 1
     ADVERT = 2
     COMMENT = 3

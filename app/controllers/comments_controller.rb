@@ -17,7 +17,7 @@ class CommentsController < ApplicationController
   def update
     @id = params[:id]
     @comment = Comment.find(@id)
-    if created_by_user(Object::COMMENT, @id)
+    if created_by_user(AppComponent::COMMENT, @id)
       @comment.update(content: params[:content])
       render json: { message: "Comment was updated" }, status: :ok
     else
@@ -28,7 +28,7 @@ class CommentsController < ApplicationController
   def delete
     @id = params[:id]
     @comment = Comment.find(@id)
-    if created_by_user(Object::COMMENT, @id)
+    if created_by_user(AppComponent::COMMENT, @id)
       @comment.destroy
       render json: { message: "Comment was destroyed" }, status: :ok
     else

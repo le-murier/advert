@@ -39,7 +39,7 @@ class UsersController < ApplicationController
       @user.update(token: token)
       render json: { token: token, id: @user.id }, status: :ok
     else
-      render json: { error: "Invalid username or password" },
+      render json: { error: "Invalid username or password"},
        status: :bad_request
     end
   end
@@ -48,7 +48,7 @@ class UsersController < ApplicationController
     @id = params[:id].to_i
     @user = User.find(params[:id])
     @token_user = User.find(get_id)
-    if created_by_user(Object::USER, @id)
+    if created_by_user(AppComponent::USER, @id)
       @update_json = update_params(@token_user.role)
       @user.update(@update_json)
       render json: { message: "User was updated" }, status: :ok
@@ -60,7 +60,7 @@ class UsersController < ApplicationController
   def delete
     @id = params[:id].to_i
     @user = User.find(params[:id])
-    if created_by_user(Object::USER, @id)
+    if created_by_user(AppComponent::USER, @id)
       @user.destroy
       render json: { message: "User was destroyed" }, status: :ok
     else

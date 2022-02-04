@@ -38,7 +38,7 @@ class AdvertisementsController < ApplicationController
     @id = params[:id]
     @advert = Advertisement.find(@id)
     @user = User.find(get_id)
-    @advert.update(update_params(@user.role)) if created_by_user(Object::ADVERT, @id)
+    @advert.update(update_params(@user.role)) if created_by_user(AppComponent::ADVERT, @id)
     if @advert.valid?
       render json: { message: "Advertisement was updated" }, status: :ok
     else
@@ -49,7 +49,7 @@ class AdvertisementsController < ApplicationController
   def delete
     @id = params[:id]
     @advert = Advertisement.find(@id)
-    if created_by_user(Object::ADVERT, @id)
+    if created_by_user(AppComponent::ADVERT, @id)
       @advert.destroy
       render json: { message: "Advertisement was destroyed" }, status: :ok
     else
@@ -110,18 +110,13 @@ class AdvertisementsController < ApplicationController
   end
 
   def update_params(role)
-    case role
+    advert_data = case role
     when Role::ADMIN
-      advert_data = {
-        status: params[:status],
-      }
+      { status: params[:status] }
     when Role::USER
-      advert_data = {
-        title: params[:title],
-        content: params[:content],
-      }
+      { title: params[:title], content: params[:content] }
     else
-      advert_data = {}
+      {}
     end
   end
 

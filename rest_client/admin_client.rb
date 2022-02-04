@@ -13,61 +13,89 @@ class AdminClient
   attr_accessor :token
 
   def show
-    RestClient::Request.execute(
-        method: :get,
-        url: Url::ADMINS,
-        headers: @headers
+    begin
+      RestClient::Request.execute(
+          method: :get,
+          url: ADMINS_URI,
+          headers: @headers
       )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def update_user(id, role)
-    RestClient::Request.execute(
-      method: :put,
-      url: get_url_user(id),
-      payload: { "role": @role },
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :put,
+        url: get_url_user(id),
+        payload: { "role": @role },
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def delete_user(id)
-    RestClient::Request.execute(
-      method: :delete,
-      url: get_url_user(id),
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :delete,
+        url: get_url_user(id),
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def get_drafts
-    RestClient::Request.execute(
-      method: :get,
-      url: Url::DRAFTS,
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :get,
+        url: DRAFTS_URI,
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def update_advert(id)
-    RestClient::Request.execute(
-      method: :put,
-      url: get_url_advert(id),
-      payload: { "status": @status },
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :put,
+        url: get_url_advert(id),
+        payload: { "status": @status },
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def delete_advert(id)
-    RestClient::Request.execute(
-      method: :delete,
-      url: get_url_advert(id),
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :delete,
+        url: get_url_advert(id),
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def delete_comment(id)
-    RestClient::Request.execute(
-      method: :delete,
-      url: get_url_comment(id),
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :delete,
+        url: get_url_comment(id),
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def refresh_headers
@@ -78,14 +106,14 @@ class AdminClient
   private
 
   def get_url_user(id)
-    Url::USERS + id.to_s
+    USERS_URI + id.to_s
   end
 
   def get_url_advert(id)
-    Url::ADVERTS + id.to_s
+    ADVERTS_URI + id.to_s
   end
 
   def get_url_comment(id)
-    Url::COMMENTS + id.to_s
+    COMMENTS_URI + id.to_s
   end
 end

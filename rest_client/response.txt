@@ -1,42 +1,32 @@
+#<UserClient:0x0000560088267f30>
 {"message":"User was created"}
-eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyfQ.4aV9sPAQmgK4hTBPihEXF3CVkzLDz3jsmWShy2TtQfU
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxN30.IOsie39H8JzkOSuGptKc1UmBZ512Zzaz56bIxyZFRGo
 {"message":"User was logged out"}
-eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyfQ.4aV9sPAQmgK4hTBPihEXF3CVkzLDz3jsmWShy2TtQfU
-[{"id":1,"email":"admin@gmail.com","user_name":"admin"},{"id":2,"email":"usre@gmail.com","user_name":"newsr1"}]
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxN30.IOsie39H8JzkOSuGptKc1UmBZ512Zzaz56bIxyZFRGo
+[{"id":1,"email":"testUser0@gmail.com","user_name":"testuser0"},{"id":2,"email":"testUser1@gmail.com","user_name":"testuser1"},{"id":3,"email":"admin@gmail.com","user_name":"admin"},{"id":17,"email":"googboy@gmail.com","user_name":"googboy"},{"id":6,"email":"tstuser@gmail.com","user_name":"tstuser"},{"id":7,"email":"tstuse54r@gmail.com","user_name":"tstuser4"}]
 {"message":"User was updated"}
-{"id":2,"email":"usre@gmail.com","user_name":"newsr1"}
-{"message":"User was destroyed"}
-{"message":"User was created"}
-eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozfQ.ocFaRU1kYVGQ6vTH0wuz5Wn_HcmUbBzB6mlcgqoUcho
-{"message":"User was logged out"}
-eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozfQ.ocFaRU1kYVGQ6vTH0wuz5Wn_HcmUbBzB6mlcgqoUcho
-[{"id":1,"email":"admin@gmail.com","user_name":"admin"},{"id":3,"email":"usre@gmail.com","user_name":"newsr1"}]
-{"message":"User was updated"}
-{"id":3,"email":"usre@gmail.com","user_name":"newsr1"}
-{"message":"User was destroyed"}
-{"message":"User was created"}
-eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo1fQ.a1AOLLCShcjFX7EEqjwUd-EahIH4hbrGVHHu1sk4-c4
-{"message":"User was logged out"}
-eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo1fQ.a1AOLLCShcjFX7EEqjwUd-EahIH4hbrGVHHu1sk4-c4
-[{"id":1,"email":"admin@gmail.com","user_name":"admin"},{"id":4,"email":"usre@gmail.com","user_name":"newsr1"},{"id":5,"email":"usrye@gmail.com","user_name":"newyr1"}]
-{"message":"User was updated"}
-{"id":5,"email":"usrye@gmail.com","user_name":"newyr1"}
-{"message":"User was destroyed"}
-{"message":"User was created"}
-eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3fQ.VNqXj0cIwQRJ-dAKgfdWMF9Hmmh6d8wc7dYj1hdm09U
-{"message":"User was logged out"}
-eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3fQ.VNqXj0cIwQRJ-dAKgfdWMF9Hmmh6d8wc7dYj1hdm09U
-[{"id":1,"email":"admin@gmail.com","user_name":"admin"},{"id":4,"email":"usre@gmail.com","user_name":"newsr1"},{"id":6,"email":"usrye@gmail.com","user_name":"newyr1"},{"id":7,"email":"us5rye@gmail.com","user_name":"newy5r1"}]
-{"message":"User was updated"}
-{"id":7,"email":"us5rye@gmail.com","user_name":"newy5r1"}
-{"message":"User was destroyed"}
-{"message":"User was created"}
-eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo5fQ.nDT3i82YcoghVvVD8lT2DFplmJr-G8q6oIMCVUba7QY
-{"message":"User was logged out"}
-eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo5fQ.nDT3i82YcoghVvVD8lT2DFplmJr-G8q6oIMCVUba7QY
-[{"id":1,"email":"admin@gmail.com","user_name":"admin"},{"id":4,"email":"usre@gmail.com","user_name":"newsr1"},{"id":6,"email":"usrye@gmail.com","user_name":"newyr1"},{"id":8,"email":"us5rye@gmail.com","user_name":"newy5r1"},{"id":9,"email":"usety5@gmail.com","user_name":"usety"}]
-{"message":"User was updated"}
-{"id":9,"email":"usety5@gmail.com","user_name":"usety"}
-
-{"message":"Advertisement was created","id":4}
+{"id":17,"email":"googboy@gmail.com","user_name":"googboy"}
+#<AdvertClient:0x0000560087fcd950>
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxN30.IOsie39H8JzkOSuGptKc1UmBZ512Zzaz56bIxyZFRGo
+{"message":"Advertisement was created","id":15}
 {"message":"Advertisement was updated"}
+#<CommentClient:0x0000560087f27d98>
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxN30.IOsie39H8JzkOSuGptKc1UmBZ512Zzaz56bIxyZFRGo
+{"message":"Comment was created","id":15}
+{"message":"Comment was updated"}
+{"username":"googboy","content":"U ARE THE 2COOL1d1EST! SERIOSLYYY, DUDE"}
+#<UserClient:0x0000560087cb8d50>
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozfQ.ocFaRU1kYVGQ6vTH0wuz5Wn_HcmUbBzB6mlcgqoUcho
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozfQ.ocFaRU1kYVGQ6vTH0wuz5Wn_HcmUbBzB6mlcgqoUcho
+#<AdminClient:0x000056008813bb70>
+{"Content-Type"=>"application/x-www-form-urlencoded", :Authorization=>"Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozfQ.ocFaRU1kYVGQ6vTH0wuz5Wn_HcmUbBzB6mlcgqoUcho"}
+{"id":3,"email":"admin@gmail.com","user_name":"admin"}
+{"message":"User was updated"}
+[{"title":"Draft, we dont se u","username":"testuser1","views":0},{"title":"CooflAd6vert2.0dffgfg","username":"tstuser4","views":0},{"title":"googboy Advert 2","username":"googboy","views":0}]
+{"message":"Advertisement was updated"}
+[{"title":"Test advert","username":"testuser0","views":0}]
+{"title":"googboy Advert 2","content":"I wanna to sell a car and spoon! ffffffffffffffff","username":"googboy","views":1}
+[{"username":"googboy","content":"U ARE THE 2COOL1d1EST! SERIOSLYYY, DUDE"}]
+{"message":"Comment was destroyed"}
+{"message":"Advertisement was destroyed"}
+{"message":"User was destroyed"}

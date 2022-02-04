@@ -2,7 +2,7 @@
 require 'rubygems'
 require 'rest_client'
 require 'json'
-require_relative  'rest_const'
+require_relative 'rest_const'
 
 class CommentClient
   def initialize(adverb_id, content)
@@ -17,40 +17,56 @@ class CommentClient
   attr_accessor :token, :id
 
   def get_by(id)
-    RestClient::Request.execute(
-      method: :get,
-      url: get_url_by(id),
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :get,
+        url: get_url_by(id),
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def create
-    refresh_headers
-    @response = RestClient::Request.execute(
-      method: :post,
-      url: Url::COMMENTS,
-      payload: get_json,
-      headers: @headers
-    )
-    @id = JSON.parse(@response)["id"]
-    @response
+    begin
+      refresh_headers
+      @response = RestClient::Request.execute(
+        method: :post,
+        url: COMMENTS_URI,
+        payload: get_json,
+        headers: @headers
+      )
+      @id = JSON.parse(@response)["id"]
+      @response
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def update(id, content)
-    RestClient::Request.execute(
-      method: :put,
-      url: get_url_by(id),
-      payload: { "content": content },
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :put,
+        url: get_url_by(id),
+        payload: { "content": content },
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def delete(id)
-    RestClient::Request.execute(
-      method: :delete,
-      url: get_url_by(id),
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :delete,
+        url: get_url_by(id),
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   private
@@ -63,7 +79,7 @@ class CommentClient
   end
 
   def get_url_by(id)
-    Url::COMMENTS + id.to_s
+    COMMENTS_URI + id.to_s
   end
 
   def refresh_headers

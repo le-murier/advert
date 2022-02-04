@@ -2,7 +2,7 @@
 require 'rubygems'
 require 'rest_client'
 require 'json'
-require_relative  'rest_const'
+require_relative 'rest_const'
 
 class AdvertClient
   def initialize(title, content)
@@ -17,52 +17,76 @@ class AdvertClient
   attr_accessor :token, :id
 
   def get
-    RestClient.get(Url::ADVERTS)
+    begin
+      RestClient.get(ADVERTS_URI)
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def get_by(id)
-    RestClient::Request.execute(
-      method: :get,
-      url: get_url(id),
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :get,
+        url: get_url(id),
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def create
-    refresh_headers
-    @response = RestClient::Request.execute(
-      method: :post,
-      url: Url::ADVERTS,
-      payload: get_json(@title, @content),
-      headers: @headers
-    )
-    @id = JSON.parse(@response)["id"]
-    @response
+    begin
+      refresh_headers
+      @response = RestClient::Request.execute(
+        method: :post,
+        url: ADVERTS_URI,
+        payload: get_json(@title, @content),
+        headers: @headers
+      )
+      @id = JSON.parse(@response)["id"]
+      @response
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def update(id, title, content)
-    RestClient::Request.execute(
-      method: :put,
-      url: get_url(id),
-      payload: get_json(title, content),
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :put,
+        url: get_url(id),
+        payload: get_json(title, content),
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def delete(id)
-    RestClient::Request.execute(
-      method: :delete,
-      url: get_url(id),
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :delete,
+        url: get_url(id),
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   def show_comment(id)
-    RestClient::Request.execute(
-      method: :get,
-      url: url_comment(id),
-      headers: @headers
-    )
+    begin
+      RestClient::Request.execute(
+        method: :get,
+        url: url_comment(id),
+        headers: @headers
+      )
+    rescue RestClient::ExceptionWithResponse => err
+      err.response
+    end
   end
 
   private
@@ -75,7 +99,7 @@ class AdvertClient
   end
 
   def get_url(id)
-    Url::ADVERTS + id.to_s
+    ADVERTS_URI + id.to_s
   end
 
   def url_comment(id)
