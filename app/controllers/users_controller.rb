@@ -83,12 +83,13 @@ class UsersController < ApplicationController
   private
 
   def user_params
+    correct_password = /\A(?=.*[a-zA-Z])(?=.*[0-9]).{6,}\z/
       user_data = {
         user_name: params[:user_name],
         email: params[:email],
         password: params[:password],
         role: "user",
-      }
+      } if correct_password === params[:password]
   end
 
   def update_params(role)
