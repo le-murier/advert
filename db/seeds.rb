@@ -24,7 +24,7 @@
       content: "We are testing some features right now",
       user_id: @user0.id,
       status: "publicated",
-      views: 0,
+      views_number: 0,
 )
 
 @advert1 = Advertisement.create(
@@ -32,23 +32,23 @@
       content: "I don't know what to write...",
       user_id: @user1.id,
       status: "draft",
-      views: 0,
+      views_number: 0,
 )
 
 Comment.create(
-      adverb_id: @advert0.id,
+      advertisement_id: @advert0.id,
       content: "Testing Comment, dude",
       user_id: @user0.id,
 )
 
 Comment.create(
-      adverb_id: @advert0.id,
+      advertisement_id: @advert0.id,
       content: "Another new cool comment",
       user_id: @user0.id,
 )
 
 Comment.create(
-      adverb_id: @advert0.id,
+      advertisement_id: @advert0.id,
       content: "I am so bored of ...",
       user_id: @user1.id,
 )

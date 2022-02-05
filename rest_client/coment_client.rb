@@ -5,10 +5,10 @@ require 'json'
 require_relative 'rest_const'
 
 class CommentClient
-  def initialize(adverb_id, content)
+  def initialize(advertisement_id, content)
     @token = " "
     @id = -1
-    @adverb_id = adverb_id
+    @advertisement_id = advertisement_id
     @content = content
     @headers = { "Content-Type" => "application/x-www-form-urlencoded",
         "Authorization": "Bearer #{@token}"}
@@ -73,7 +73,7 @@ class CommentClient
 
   def get_json
     params = {
-        "adverb_id": @adverb_id,
+        "advertisement_id": @advertisement_id,
         "content": @content,
       }
   end

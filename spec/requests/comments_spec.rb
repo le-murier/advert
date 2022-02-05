@@ -5,7 +5,7 @@ require 'json'
 RSpec.describe Advertisement, type: :request do #працює, але треба уточнити
   subject {
     described_class.new(
-      adverb_id: @adverb_id,
+      advertisement_id: @advertisement_id,
       content: "HELLO ALL I WANNA TO SELL A CAR, AND CARROT"
     )
   }
@@ -17,7 +17,7 @@ RSpec.describe Advertisement, type: :request do #працює, але треба
   def create_comment
     post "/advertisements",
     :params => {
-      :adverb_id => subject.adverb_id,
+      :advertisement_id => subject.advertisement_id,
       :content => subject.content,
     },
      :headers => @headers

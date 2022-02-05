@@ -6,7 +6,8 @@ class CommentsController < ApplicationController
   end
 
   def create
-    @comment = Comment.create(advert_params)
+    @user = User.find(get_id)
+    @comment = @user.comments.create(advert_params)
     if @comment.valid?
       render json: { message: "Comment was created", id: @comment.id }, status: :created
     else
@@ -40,9 +41,8 @@ class CommentsController < ApplicationController
 
   def advert_params
     advert_data = {
-        adverb_id: params[:adverb_id],
-        content: params[:content],
-        user_id: get_id,
+      content: params[:content],
+      advertisement_id: params[:advertisement_id]
     }
   end
 end

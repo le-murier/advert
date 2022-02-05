@@ -20,13 +20,13 @@ ActiveRecord::Schema.define(version: 2022_01_30_184127) do
     t.text "content", null: false
     t.integer "user_id", null: false
     t.string "status"
-    t.integer "views"
+    t.integer "views_number"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "comments", force: :cascade do |t|
-    t.integer "adverb_id", null: false
+    t.integer "advertisement_id", null: false
     t.text "content", null: false
     t.integer "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(version: 2022_01_30_184127) do
   end
 
   create_table "views", force: :cascade do |t|
-    t.integer "advert_id", null: false
+    t.integer "advertisement_id", null: false
     t.integer "user_id", null: false
     t.integer "number", default: 0
     t.datetime "created_at", precision: 6, null: false

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Comment, type: :model do
   subject {
     described_class.new(
-      adverb_id: 3,
+      advertisement_id: 3,
       content: "TEST COMMENT TEST COMMENT",
       user_id: 2)
   }

@@ -26,7 +26,8 @@ class AdvertisementsController < ApplicationController
   end
 
   def create
-    @advert = Advertisement.create(advert_params)
+    @user = User.find(get_id)
+    @advert = @user.advertisements.create(advert_params)
     if @advert.valid?
       render json: { message: "Advertisement was created", id: @advert.id }, status: :created
     else
@@ -75,7 +76,7 @@ class AdvertisementsController < ApplicationController
           title: @advert.title,
           content: @advert.content,
           username: User.find(@advert.user_id).user_name,
-          views: @advert.views,
+          views_number: @advert.views_number,
       },  status: 200
     else
       render json: { message: "Invalid input" }, status: :bad_request
@@ -87,9 +88,9 @@ class AdvertisementsController < ApplicationController
     @page = params[:page]
     if Advertisement.find(params[:id]).status != Status::DRAFT
       if @page != nil
-        @comments = Comment.where(adverb_id: @id).limit(RENDERED_PAGE).offset((@page.to_i-1) * RENDERED_PAGE)
+        @comments = Comment.where(advertisement_id: @id).limit(RENDERED_PAGE).offset((@page.to_i-1) * RENDERED_PAGE)
       else
-        @comments = Comment.where(adverb_id: @id).limit(RENDERED_PAGE).offset(0)
+        @comments = Comment.where(advertisement_id: @id).limit(RENDERED_PAGE).offset(0)
       end
       render json: @comments, status: :ok
     else
@@ -101,12 +102,11 @@ class AdvertisementsController < ApplicationController
 
   def advert_params
     advert_data = {
-        title: params[:title],
-        content: params[:content],
-        user_id: get_id,
-        status: "draft",
-        views: 0,
-      }
+      title: params[:title],
+      content: params[:content],
+      status: "draft",
+      views_number: 0
+    }
   end
 
   def update_params(role)
@@ -120,18 +120,15 @@ class AdvertisementsController < ApplicationController
     end
   end
 
-  def add_view(advert_id)
-    @user_watch = get_id
-    @advert = Advertisement.find(advert_id)
-    @view = View.find_by(advert_id: advert_id, user_id: @user_watch)
+  def add_view(advertisement_id)
+    @user = User.find(get_id)
+    @advert = Advertisement.find(advertisement_id)
+    @view = View.find_by(advertisement_id: advertisement_id, user_id: @user.id)
     if @view
       @view.update(number: @view.number + 1)
     else
-      @view = View.create({
-        advert_id: advert_id,
-        user_id: @user_watch,
-      })
-      @advert.update(views: @advert.views + 1)
+      @view = @advert.views.create(user_id: @user.id)
+      @advert.update(views_number: @advert.views_number + 1)
     end
   end
 end
