@@ -7,11 +7,14 @@ class CommentsController < ApplicationController
 
   def create
     @user = User.find(get_id)
-    @comment = @user.comments.create(advert_params)
-    if @comment.valid?
-      render json: { message: "Comment was created", id: @comment.id }, status: :created
+    @advert = Advertisement.find(params[:advertisement_id])
+    if @advert.status != Status::DRAFT
+      @comment = @user.comments.create(advert_params)
+        render json: { message: "Comment was created", id: @comment.id },
+         status: :created if @comment.valid?
+        render json: { error: "Invalid data" }, status: :bad_request
     else
-      render json: { error: "Invalid data" }, status: :bad_request
+      render json: { error: "Invalid data" }, status: :not_found
     end
   end
 

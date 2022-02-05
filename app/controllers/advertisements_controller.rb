@@ -70,7 +70,8 @@ class AdvertisementsController < ApplicationController
 
   def render_advert(id)
     @advert = Advertisement.find(id)
-    if @advert && @advert.status != Status::DRAFT
+    @user = User.find(get_id)
+    if @advert.status != Status::DRAFT || @user.role == Role::ADMIN
       add_view(id)
       render json: {
           title: @advert.title,
@@ -94,7 +95,7 @@ class AdvertisementsController < ApplicationController
       end
       render json: @comments, status: :ok
     else
-      render json: { message: "Wrong permission" }, status: :forbidden
+      render json: { message: "Wrong permission" }, status: :not_found
     end
   end
 

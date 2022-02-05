@@ -3,43 +3,24 @@ require 'json'
 require_relative 'requests_const'
 
 RSpec.describe User, type: :request do #працює
-  subject {
-    described_class.new(
-      user_name: "tstuser4",
-      email: "tstuse54r@gmail.com",
-      password: "iamaaa123")
-  }
-
-  it "User functionality" do
-    create_user && loggin_user && delete_user
-  end
-
-  def create_user
-    post "/users",
-    :params => {
-      :user_name => subject.user_name,
-      :email => subject.email,
-      :password => subject.password
-    },
-     :headers => @headers
-    expect(response).to have_http_status(:created)
-  end
-
-  def loggin_user
+  it "User login" do
     post "/login",
     :params => {
-      :user_name => subject.user_name,
-      :password => subject.password
+      :user_name => "admin",
+      :email => "admin@gmail.com",
+      :password => "securepassword789"
     },
      :headers => @headers
-    @user_token = JSON.parse(response.body)["token"]
-    @user_id = JSON.parse(response.body)["id"]
+    expect(response).to have_http_status(:ok)
   end
 
-  def delete_user
-    @headers = { "ACCEPT" => "application/json",
-      "Authorization" => "Bearer #{@user_token}" }
-    delete "/users/#{@user_id}", :headers => @headers
-    expect(response).to have_http_status(:ok)
+  it "Show admins admin only" do
+    get "/admins",
+    :params => {
+      :user_name => "testuser0",
+      :password => "securepassword123"
+    },
+     :headers => @headers
+     expect(response).to have_http_status(:unauthorized)
   end
 end

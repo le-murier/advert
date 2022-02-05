@@ -1,32 +1,20 @@
 require 'rails_helper'
 require 'json'
+require_relative 'requests_const'
 @comment_id = -1
+@advert_id = 2
 
-RSpec.describe Advertisement, type: :request do #працює, але треба уточнити
-  subject {
-    described_class.new(
-      advertisement_id: @advertisement_id,
-      content: "HELLO ALL I WANNA TO SELL A CAR, AND CARROT"
-    )
-  }
-
-  it "Comment functionality" do
-    create_comment && delete_comment
-  end
-
-  def create_comment
-    post "/advertisements",
+RSpec.describe Advertisement, type: :request do
+  it "Can not create comment for draft" do
+    @headers = { "ACCEPT" => "application/json",
+           "Authorization" => "Bearer #{USER_TOKEN}" }
+    post '/comments',
     :params => {
-      :advertisement_id => subject.advertisement_id,
-      :content => subject.content,
+      :advertisement_id => 2,
+      :content => "I AM COMMENT",
+      :user_id => 1,
     },
      :headers => @headers
-    @comment_id = JSON.parse(response.body)["id"]
-    expect(response).to have_http_status(:created)
-  end
-
-  def delete_comment
-    delete "/comments/#{@comment_id}", :headers => @headers
-    expect(response).to have_http_status(:ok)
+    expect(response).to have_http_status(:not_found)
   end
 end
