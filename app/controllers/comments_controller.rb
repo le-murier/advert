@@ -2,47 +2,50 @@ class CommentsController < ApplicationController
 
   def show
     @comment = Comment.find(params[:id])
-    render json: @comment, status: 200
+    render json: @comment, status: :ok
   end
 
   def create
-    @comment = Comment.create(advert_params)
-    if @comment.valid?
-      render json: { message: "Comment was created" }, status: 201
+    @user = User.find(get_id)
+    @advert = Advertisement.find(params[:advertisement_id])
+    if @advert.status != Status::DRAFT
+      @comment = @user.comments.create(advert_params)
+        render json: { message: "Comment was created", id: @comment.id },
+         status: :created if @comment.valid?
+        render json: { error: "Invalid data" }, status: :bad_request
     else
-      render json: { error: "Invalid data" }, status: 400
+      render json: { error: "Invalid data" }, status: :not_found
     end
   end
 
   def update
     @id = params[:id]
     @comment = Comment.find(@id)
-    if created_by_user(Object::COMMENT, @id)
+    if created_by_user(AppComponent::COMMENT, @id)
       @comment.update(content: params[:content])
-      render json: { message: "Comment was updated" }, status: 200
+      render json: { message: "Comment was updated" }, status: :ok
     else
-      render json: { error: "Wrong permition" }, status: 403
+      render json: { error: "Wrong permission" }, status: :forbidden
     end
   end
 
   def delete
     @id = params[:id]
     @comment = Comment.find(@id)
-    if created_by_user(Object::COMMENT, @id)
+    if created_by_user(AppComponent::COMMENT, @id)
       @comment.destroy
-      render json: { message: "Comment was destroyed" }, status: 200
+      render json: { message: "Comment was destroyed" }, status: :ok
     else
-      render json: { error: "Wrong permition" }, status: 403
+      render json: { error: "Wrong permission" }, status: :forbidden
     end
   end
 
   private
 
-  def advert_params()
+  def advert_params
     advert_data = {
-        adverb_id: params[:adverb_id],
-        content: params[:content],
-        user_id: get_id,
+      content: params[:content],
+      advertisement_id: params[:advertisement_id]
     }
   end
 end

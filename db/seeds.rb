@@ -1,12 +1,12 @@
 @user0 = User.create(
-     user_name: "testUser0",
+     user_name: "testuser0",
      email: "testUser0@gmail.com",
      password: "securepassword123",
      role: "user",
 )
 
 @user1 = User.create(
-      user_name: "testUser1",
+      user_name: "testuser1",
       email: "testUser1@gmail.com",
       password: "securepassword456",
       role: "user",
@@ -24,31 +24,31 @@
       content: "We are testing some features right now",
       user_id: @user0.id,
       status: "publicated",
-      views: 0,
+      views_number: 0,
 )
 
 @advert1 = Advertisement.create(
-      title: "Draft",
+      title: "Draft, we dont se u",
       content: "I don't know what to write...",
       user_id: @user1.id,
       status: "draft",
-      views: 0,
+      views_number: 0,
 )
 
 Comment.create(
-      adverb_id: @advert0.id,
+      advertisement_id: @advert0.id,
       content: "Testing Comment, dude",
       user_id: @user0.id,
 )
 
 Comment.create(
-      adverb_id: @advert0.id,
+      advertisement_id: @advert0.id,
       content: "Another new cool comment",
       user_id: @user0.id,
 )
 
 Comment.create(
-      adverb_id: @advert0.id,
+      advertisement_id: @advert0.id,
       content: "I am so bored of ...",
       user_id: @user1.id,
 )

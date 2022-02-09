@@ -5,7 +5,7 @@ class CreateAdvertisements < ActiveRecord::Migration[7.0]
       t.text :content, :null => false
       t.integer :user_id, :null => false
       t.string :status
-      t.integer :views
+      t.integer :views_number
       t.timestamps
     end
   end
